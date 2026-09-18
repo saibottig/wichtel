@@ -2,7 +2,6 @@
 
 Type: prototype
 Status: open
-Blocked by: 04, 05
 
 ## Question
 
@@ -17,3 +16,10 @@ Also needs a view of the finished state, meaning the current year's letter and c
 German interface throughout.
 
 Blocked by the link format and the colour list, because a prototype needs real data and a real URL shape to be worth reacting to.
+
+## Note added after 04 and 06 resolved
+
+No copy-snippet or archive UI is needed.
+Archiving is a maintainer script, so the page only ever reads the archive to list past years.
+
+The bare page with no token in the URL offers a draw, and drawing is ungated.

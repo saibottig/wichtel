@@ -38,12 +38,13 @@ They are not up for re-litigation without a new reason.
 ## Decisions so far
 
 - [GitHub Pages hosting requirements](issues/01-github-pages-hosting-requirements.md): DNS for `turbodev.eu` is run by Cloudflare, not Checkdomain, so the record goes in the Cloudflare dashboard. `wichtel.turbodev.eu` does not resolve at all yet. The record is a CNAME to `saibottig.github.io`, and it must be unproxied.
+- [Decide the result link format](issues/04-result-link-format.md): the result rides in the URL hash as one opaque token that decodes back to year, letter and colour. Drawing is ungated, and a bare page with no token offers a draw.
+- [Curate the colour pool](issues/05-curate-the-colour-pool.md): about 28 entries in one flat list, ordinary and wild mixed, sized so repeats stay unlikely for over a decade. Nothing is excluded for being hard to shop for.
+- [Archive format for past years](issues/06-archive-format-for-past-years.md): archiving is a maintainer job, invisible to participants. A repository script takes the token, decodes it, and writes the year into the archive JSON. The page gains no archiving UI.
 
 ## Not yet specified
 
-- How the site decides which year is current, and what it shows between the draw and Christmas. This sharpens once the archive format exists.
-- Whether drawing needs to be gated somehow, so a visitor who is not hosting cannot roll a new result and confuse the group. This depends on what the link format turns out to be.
-- What the site does on a first visit with no link and no draw yet for this year.
+- How the site decides which year is current, and what it shows between the draw and Christmas.
 
 ## Out of scope
 

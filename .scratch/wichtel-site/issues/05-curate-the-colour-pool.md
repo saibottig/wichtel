@@ -1,18 +1,26 @@
 # Curate the colour pool
 
 Type: grilling
-Status: open
+Status: resolved
 
 ## Question
 
 Settle the actual list of colours.
-The structure is already decided, meaning one flat list with every entry equally likely.
-What is missing is the content.
+The structure was already decided, meaning one flat list with every entry equally likely.
 
-Glitzer and Bunt are confirmed.
-Needed: the ordinary colours, the rest of the wild ones, and a rough sense of how long the list should be.
+## Answer
 
-List length is not cosmetic.
-With a short list, repeats across years become likely fast, and the group will notice.
+**Around 28 entries, ordinary and wild mixed in one flat list.**
+Ordinary colours carry the everyday cases.
+Wild entries carry the joke, and Glitzer and Bunt are confirmed members.
 
-Worth deciding at the same time whether any entry is a trap that makes gift buying genuinely impossible, in the way Q, X and Y were considered for letters and deliberately kept.
+**Length was chosen against repeats.**
+At roughly 28 entries a repeated colour stays unlikely for well over a decade, which matters because the group will notice a repeat.
+A list of about 16 would start colliding within roughly six years.
+
+**No entry is excluded for being hard to shop for.**
+This matches the decision on letters, where Q, X and Y were kept deliberately.
+Difficulty is part of the game.
+
+The exact list is written when the site is built.
+It lives in one place in the source so it can be edited without touching anything else.
