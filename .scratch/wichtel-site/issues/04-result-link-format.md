@@ -30,3 +30,15 @@ A static page cannot enforce a gate, and the committed archive is the record, so
 
 **A bare page with no token offers a draw.**
 That settles the first-visit case that was sitting in the map's fog.
+
+## Nachtrag aus der Umsetzung
+
+Der Token trägt eine kurze Prüfsumme.
+Das widerspricht der Entscheidung oben nicht, denn sie verteidigt nicht gegen Manipulation.
+Wer die Kodierung nachbaut, fälscht weiterhin ohne Mühe einen Token, und das bleibt hingenommen.
+Sie fängt den Fall ab, dass ein Messenger den Link beim Weiterleiten abschneidet.
+Ohne sie dekodiert ein abgeschnittener Link still zu einem falschen Ergebnis, was schlimmer ist als eine Fehlermeldung.
+
+Die Seite zeigt den genauen Fehlergrund nicht an.
+Sie nennt den wahrscheinlichen Fall in einem Satz und bietet neu auszulosen.
+Der genaue Grund ist für das Archiv-Skript da, nicht für die Gruppe.

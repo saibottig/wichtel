@@ -1,7 +1,7 @@
 # Prototype the draw and the reveal
 
 Type: prototype
-Status: open
+Status: resolved
 
 ## Question
 
@@ -23,3 +23,19 @@ No copy-snippet or archive UI is needed.
 Archiving is a maintainer script, so the page only ever reads the archive to list past years.
 
 The bare page with no token in the URL offers a draw, and drawing is ungated.
+
+## Answer
+
+Kein Wegwerf-Prototyp gebaut.
+Die Umsetzung ging direkt in die echte Seite, weil die offenen Fragen zu Link, Farbtopf und Archiv vorher geklärt waren und damit nichts mehr übrig blieb, worauf ein Prototyp hätte antworten sollen.
+Das ist eine bewusste Abweichung von der Prototyp-Regel, nicht ein übersprungener Schritt.
+
+**Die Ziehung läuft durch, bevor sie landet.**
+Buchstaben und Farben wechseln etwa zwei Sekunden lang und werden dabei langsamer, dann rastet das Ergebnis mit einem kurzen Sprung ein.
+Bei `prefers-reduced-motion` entfällt der Lauf und das Ergebnis steht sofort.
+
+**Der fertige Zustand ist das, was die meisten öffnen werden.**
+Oben Jahr, Buchstabe und Farbe mit Tupfer, darunter ein Satz in Klartext, darunter die vergangenen Jahre.
+Das laufende Jahr steht nie doppelt, also nicht gleichzeitig oben und in der Liste.
+
+In Chromium durchgespielt: erster Besuch, Lauf und Landung, geteilter Link in einem frischen Tab, kaputter Link, Handybreite ohne seitlichen Überlauf.

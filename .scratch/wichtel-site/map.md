@@ -38,13 +38,16 @@ They are not up for re-litigation without a new reason.
 ## Decisions so far
 
 - [GitHub Pages hosting requirements](issues/01-github-pages-hosting-requirements.md): DNS for `turbodev.eu` is run by Cloudflare, not Checkdomain, so the record goes in the Cloudflare dashboard. `wichtel.turbodev.eu` does not resolve at all yet. The record is a CNAME to `saibottig.github.io`, and it must be unproxied.
+- [Make master the default branch](issues/03-make-master-the-default-branch.md): already done before this session. `HEAD` on the remote points at `master` and the scratch branch is gone. Its deletion may have taken the `CNAME` with it.
 - [Decide the result link format](issues/04-result-link-format.md): the result rides in the URL hash as one opaque token that decodes back to year, letter and colour. Drawing is ungated, and a bare page with no token offers a draw.
 - [Curate the colour pool](issues/05-curate-the-colour-pool.md): about 28 entries in one flat list, ordinary and wild mixed, sized so repeats stay unlikely for over a decade. Nothing is excluded for being hard to shop for.
 - [Archive format for past years](issues/06-archive-format-for-past-years.md): archiving is a maintainer job, invisible to participants. A repository script takes the token, decodes it, and writes the year into the archive JSON. The page gains no archiving UI.
+- [Prototype the draw and the reveal](issues/07-prototype-the-draw-and-reveal.md): no throwaway prototype was built, because nothing was left open for one to answer. The reveal cycles for about two seconds and decelerates into the result, and stands still under `prefers-reduced-motion`.
+- [Build and deploy the site](issues/08-build-and-deploy-the-site.md): built and pushed to `master`, four pure modules behind a thin DOM adapter. Not yet reachable, because the DNS record is still missing. Worth checking whether the custom domain setting survived the deletion of the scratch branch.
 
 ## Not yet specified
 
-- How the site decides which year is current, and what it shows between the draw and Christmas.
+- What the site should do in the months after Christmas. The page takes the calendar year, so on 1 January it stops showing the result the group is still wichteling under and invites a draw for a Wichteln eleven months away. Nobody will open it then, which is why this was left rather than guessed at.
 
 ## Out of scope
 

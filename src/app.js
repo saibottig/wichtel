@@ -1,48 +1,16 @@
 /**
- * Die duenne Schicht zwischen den reinen Modulen und dem DOM.
+ * Die dünne Schicht zwischen den reinen Modulen und dem DOM.
  *
- * Hier wird nichts entschieden, was sich prüfen liesse. Der Zustand kommt aus
- * `chooseView`, gezogen wird in `draw`, kodiert in `token`. Uebrig bleiben
+ * Hier wird nichts entschieden, was sich prüfen ließe. Der Zustand kommt aus
+ * `chooseView`, gezogen wird in `draw`, kodiert in `token`. Übrig bleiben
  * Animation, Zwischenablage und das Setzen von Textknoten.
  */
 
-import { draw } from './draw.js';
+import { draw, waehleAus } from './draw.js';
 import { encodeToken } from './token.js';
 import { chooseView } from './view.js';
-import { BUCHSTABEN, FARBEN } from './pool.js';
-
-/** Wie eine Farbe als Tupfer aussieht. Reine Darstellung, kein Teil der Domäne. */
-const TUPFER = {
-  Rot: '#d33b33',
-  Blau: '#2f6fd0',
-  Grün: '#3a9e52',
-  Gelb: '#e8cf3f',
-  Orange: '#e3892f',
-  Lila: '#8a4fc4',
-  Rosa: '#e37fae',
-  Türkis: '#2fb8ad',
-  Braun: '#8a5a33',
-  Schwarz: '#1b1b1b',
-  Weiß: '#f4f4f0',
-  Grau: '#8d938f',
-  Beige: '#ddceae',
-  Gold: 'linear-gradient(135deg, #f6dd8c, #c2932f)',
-  Silber: 'linear-gradient(135deg, #eef1f3, #9aa3a9)',
-  Dunkelblau: '#1e3a73',
-  Hellgrün: '#8ed06a',
-  Bordeaux: '#7a2233',
-  Glitzer: 'conic-gradient(#f6dd8c, #fff3c4, #d6a93c, #fffbe8, #f6dd8c)',
-  Bunt: 'conic-gradient(#d33b33, #e8cf3f, #3a9e52, #2f6fd0, #8a4fc4, #d33b33)',
-  Neon: 'linear-gradient(135deg, #b6ff2e, #17f0d0)',
-  Pastell: 'linear-gradient(135deg, #f7c9d9, #cfe3f7, #d8f2d4)',
-  Gestreift: 'repeating-linear-gradient(45deg, #f4f4f0 0 4px, #d33b33 4px 8px)',
-  Kariert: 'repeating-conic-gradient(#d33b33 0% 25%, #f4f4f0 0% 50%) 0 / 12px 12px',
-  Gepunktet: 'radial-gradient(#1b1b1b 32%, #f4f4f0 34%) 0 / 8px 8px',
-  Durchsichtig:
-    'repeating-conic-gradient(rgba(255,255,255,0.22) 0% 25%, rgba(255,255,255,0.05) 0% 50%) 0 / 9px 9px',
-  Metallic: 'linear-gradient(135deg, #cfd6da, #7d878d 45%, #eef1f3 70%, #8c959b)',
-  Regenbogen: 'linear-gradient(135deg, #d33b33, #e8892f, #e8cf3f, #3a9e52, #2f6fd0, #8a4fc4)',
-};
+import { pastYears } from './archive.js';
+import { BUCHSTABEN, FARBEN, tupferFuer } from './pool.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -52,13 +20,7 @@ const bereiche = {
   fehler: $('bereich-fehler'),
 };
 
-const zufaelligAus = (topf) => topf[Math.floor(Math.random() * topf.length)];
-
 const ruhigeBewegung = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-const faerbe = (knoten, farbe) => {
-  knoten.style.background = TUPFER[farbe] ?? 'rgba(255,255,255,0.14)';
-};
 
 /** Der Token, den diese Seite selbst gesetzt hat, damit `hashchange` ihn ignoriert. */
 let selbstGesetzterToken = null;
@@ -69,20 +31,29 @@ const zeigeBereich = (name) => {
   }
 };
 
+const knoepfeSperren = (gesperrt) => {
+  for (const knopf of document.querySelectorAll('.knopf')) {
+    knopf.disabled = gesperrt;
+  }
+};
+
+const zeigeFarbe = (farbe) => {
+  $('ergebnis-farbname').textContent = farbe;
+  $('ergebnis-tupfer').style.background = tupferFuer(farbe);
+};
+
 const schreibeErgebnis = ({ jahr, buchstabe, farbe }) => {
   $('ergebnis-jahr').textContent = `Wichteln ${jahr}`;
   $('ergebnis-buchstabe').textContent = buchstabe;
-  $('ergebnis-farbname').textContent = farbe;
-  faerbe($('ergebnis-tupfer'), farbe);
+  zeigeFarbe(farbe);
   $('ergebnis-regel').textContent =
     `Das Geschenk fängt mit ${buchstabe} an und ist ${farbe.toLowerCase()}.`;
 };
 
 const zeigeVergangeneJahre = (jahre) => {
   const bereich = $('bereich-vergangenes');
-  const liste = $('jahresliste');
   bereich.hidden = jahre.length === 0;
-  liste.replaceChildren(
+  $('jahresliste').replaceChildren(
     ...jahre.map(({ jahr, buchstabe, farbe }) => {
       const zeile = document.createElement('li');
       zeile.className = 'jahreszeile';
@@ -99,7 +70,7 @@ const zeigeVergangeneJahre = (jahre) => {
       farbfeld.className = 'jahres-farbe';
       const tupfer = document.createElement('span');
       tupfer.className = 'tupfer';
-      faerbe(tupfer, farbe);
+      tupfer.style.background = tupferFuer(farbe);
       const farbname = document.createElement('span');
       farbname.textContent = farbe;
       farbfeld.append(tupfer, farbname);
@@ -111,10 +82,10 @@ const zeigeVergangeneJahre = (jahre) => {
 };
 
 /**
- * Laesst Buchstaben und Farben durchlaufen und wird dabei langsamer.
+ * Lässt Buchstaben und Farben durchlaufen und wird dabei langsamer.
  *
  * Der Moment des Ziehens ist der halbe Spaß, und ein Ergebnis, das einfach da
- * ist, faellt flach.
+ * ist, fällt flach.
  */
 const laufenLassen = () =>
   new Promise((fertig) => {
@@ -139,10 +110,8 @@ const laufenLassen = () =>
       }
       if (jetzt >= naechsterWechsel) {
         naechsterWechsel = jetzt + 45 + 330 * fortschritt * fortschritt;
-        $('ergebnis-buchstabe').textContent = zufaelligAus(BUCHSTABEN);
-        const farbe = zufaelligAus(FARBEN);
-        $('ergebnis-farbname').textContent = farbe;
-        faerbe($('ergebnis-tupfer'), farbe);
+        $('ergebnis-buchstabe').textContent = waehleAus(BUCHSTABEN, Math.random);
+        zeigeFarbe(waehleAus(FARBEN, Math.random));
       }
       requestAnimationFrame(schritt);
     };
@@ -150,13 +119,10 @@ const laufenLassen = () =>
     requestAnimationFrame(schritt);
   });
 
-const auslosen = async (jahr) => {
+const auslosen = async (archiv, jahr) => {
   const ergebnis = draw(jahr);
-  const token = encodeToken(ergebnis);
 
-  for (const knopf of document.querySelectorAll('.knopf')) {
-    knopf.disabled = true;
-  }
+  knoepfeSperren(true);
   $('kopier-rueckmeldung').textContent = '';
   $('ergebnis-jahr').textContent = `Wichteln ${jahr}`;
   zeigeBereich('ergebnis');
@@ -164,15 +130,14 @@ const auslosen = async (jahr) => {
   await laufenLassen();
 
   schreibeErgebnis(ergebnis);
+  // Das frisch gezogene Jahr steht oben und gehört nicht noch einmal in die Liste.
+  zeigeVergangeneJahre(pastYears(archiv).filter((eintrag) => eintrag.jahr !== jahr));
   bereiche.ergebnis.classList.add('gelandet');
   setTimeout(() => bereiche.ergebnis.classList.remove('gelandet'), 600);
+  knoepfeSperren(false);
 
-  for (const knopf of document.querySelectorAll('.knopf')) {
-    knopf.disabled = false;
-  }
-
-  selbstGesetzterToken = token;
-  location.hash = token;
+  selbstGesetzterToken = encodeToken(ergebnis);
+  location.hash = selbstGesetzterToken;
 };
 
 const kopieren = async () => {
@@ -195,7 +160,9 @@ const zeichnen = (archiv, jahr) => {
     $('auslosung-jahr').textContent = `Wichteln ${ansicht.jahr}`;
     zeigeBereich('auslosung');
   } else {
-    $('fehler-grund').textContent = ansicht.grund;
+    // Der genaue Grund ist für das Archiv-Skript gedacht, nicht für die Gruppe.
+    $('fehler-grund').textContent =
+      'Wahrscheinlich ist er beim Weiterleiten abgeschnitten worden. Lost einfach neu aus.';
     zeigeBereich('fehler');
   }
 
@@ -217,9 +184,9 @@ const starten = async () => {
 
   zeichnen(archiv, jahr);
 
-  $('knopf-auslosen').addEventListener('click', () => auslosen(jahr));
-  $('knopf-neu').addEventListener('click', () => auslosen(jahr));
-  $('knopf-fehler-auslosen').addEventListener('click', () => auslosen(jahr));
+  for (const id of ['knopf-auslosen', 'knopf-neu', 'knopf-fehler-auslosen']) {
+    $(id).addEventListener('click', () => auslosen(archiv, jahr));
+  }
   $('knopf-kopieren').addEventListener('click', kopieren);
 
   window.addEventListener('hashchange', () => {

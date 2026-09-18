@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { draw } from '../src/draw.js';
+import { draw, waehleAus } from '../src/draw.js';
 import { BUCHSTABEN, FARBEN } from '../src/pool.js';
 
 /** Gibt die vorgegebenen Werte der Reihe nach zurueck, statt zu wuerfeln. */
@@ -42,4 +42,8 @@ test('ohne vorgegebenen Zufall wird trotzdem gueltig gezogen', () => {
   const ergebnis = draw(2026);
   assert.ok(BUCHSTABEN.includes(ergebnis.buchstabe));
   assert.ok(FARBEN.includes(ergebnis.farbe));
+});
+
+test('waehleAus greift auch bei genau eins noch in den Topf', () => {
+  assert.equal(waehleAus(['a', 'b', 'c'], () => 1), 'c');
 });

@@ -3,9 +3,9 @@
  *
  * Der Link ist der Moment, der Commit ist die Aufzeichnung. Diese Funktionen
  * arbeiten auf dem Inhalt von `archiv.json`, einem Objekt mit dem Jahr als
- * Schluessel.
+ * Schlüssel.
  *
- * Archivieren ist Sache des Ausrichters und passiert ueber `scripts/archivieren.mjs`.
+ * Archivieren ist Sache des Ausrichters und passiert über `scripts/archivieren.mjs`.
  * Die Seite liest hier nur.
  *
  * @typedef {import('./token.js').Ergebnis} Ergebnis
@@ -13,9 +13,9 @@
  */
 
 /**
- * Traegt ein Ergebnis ein und gibt ein neues Archiv zurueck.
+ * Trägt ein Ergebnis ein und gibt ein neues Archiv zurueck.
  *
- * Ein bereits vorhandenes Jahr wird wortlos ueberschrieben. Das ist der Fall,
+ * Ein bereits vorhandenes Jahr wird wortlos überschrieben. Das ist der Fall,
  * in dem die Gruppe neu auslosen wollte, und der letzte Lauf gewinnt.
  *
  * @param {Archiv} archiv

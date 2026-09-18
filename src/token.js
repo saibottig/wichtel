@@ -1,5 +1,5 @@
 /**
- * Der Token, der ein Auslosungsergebnis durch die URL traegt.
+ * Der Token, der ein Auslosungsergebnis durch die URL trägt.
  *
  * Trotz des Namens "Hash" im Sprachgebrauch ist das hier eine kodierte
  * Nutzlast, keine kryptografische Prüfsumme: das Archiv-Skript liest sie
@@ -7,9 +7,9 @@
  * Gruppenchat-Vorschau das Ergebnis nicht verraet. Wer die Kodierung nachbaut,
  * kann einen Token faelschen, und das ist bewusst so hingenommen.
  *
- * Dieses Modul kennt die Buchstaben- und Farbtoepfe absichtlich nicht. Es
+ * Dieses Modul kennt die Buchstaben- und Farbtöpfe absichtlich nicht. Es
  * kodiert Werte statt Indizes, damit ein Token lesbar bleibt, wenn sich ein
- * Topf spaeter aendert.
+ * Topf später ändert.
  *
  * @typedef {{ jahr: number, buchstabe: string, farbe: string }} Ergebnis
  */
@@ -18,7 +18,7 @@ const TRENNER = '|';
 const FRUEHESTES_JAHR = 2000;
 const SPAETESTES_JAHR = 2199;
 
-/** FNV-1a, auf vier Base36-Zeichen gekuerzt. Faengt Tippfehler, nicht Angreifer. */
+/** FNV-1a, auf vier Base36-Zeichen gekürzt. Fängt Tippfehler, nicht Angreifer. */
 const pruefsumme = (text) => {
   let h = 0x811c9dc5;
   for (const zeichen of text) {

@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 /**
- * Traegt ein ausgelostes Ergebnis ins Archiv ein.
+ * Trägt ein ausgelostes Ergebnis ins Archiv ein.
  *
  * Archivieren ist Sache des Ausrichters. Die Mitwichtelnden bekommen davon
- * nichts mit und muessen nichts kopieren.
+ * nichts mit und müssen nichts kopieren.
  *
  * Aufruf mit dem geteilten Link oder nur dem Token dahinter:
  *
  *   npm run archivieren -- 'https://wichtel.turbodev.eu/#MjAyNnxRfEdsaXR6ZXJ8c3ZoNw'
  *   npm run archivieren -- MjAyNnxRfEdsaXR6ZXJ8c3ZoNw
  *
- * Ein bereits archiviertes Jahr wird wortlos ueberschrieben, denn genau das ist
+ * Ein bereits archiviertes Jahr wird wortlos überschrieben, denn genau das ist
  * der Fall, in dem die Gruppe neu auslosen wollte. Committet wird nicht: die
  * Datei wird geändert, der Commit bleibt beim Menschen.
  */
@@ -23,7 +23,7 @@ import { addResult, resultFor } from '../src/archive.js';
 
 const ARCHIV = fileURLToPath(new URL('../archiv.json', import.meta.url));
 
-/** Nimmt den vollen Link genauso an wie den blossen Token. */
+/** Nimmt den vollen Link genauso an wie den bloßen Token. */
 const tokenAus = (eingabe) => (eingabe.includes('#') ? eingabe.slice(eingabe.indexOf('#') + 1) : eingabe);
 
 const archivLesen = async () => {

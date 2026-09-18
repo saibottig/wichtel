@@ -2,7 +2,7 @@
  * Was die Seite zeigt.
  *
  * Eine reine Funktion von URL-Token, Archiv und laufendem Jahr auf einen
- * Zustand. Das DOM haengt als duenne Schicht daran und entscheidet nichts.
+ * Zustand. Das DOM hängt als dünne Schicht daran und entscheidet nichts.
  *
  * Welches Jahr das laufende ist, entscheidet dieses Modul bewusst nicht. Es
  * bekommt das Jahr gereicht, damit die noch offene Frage nach dem Jahreswechsel
@@ -16,9 +16,9 @@ import { decodeToken } from './token.js';
 import { resultFor, pastYears } from './archive.js';
 
 /**
- * Waehlt den Zustand der Seite.
+ * Wählt den Zustand der Seite.
  *
- * Ein Token im Link schlaegt das Archiv: der geteilte Link ist der Moment, der
+ * Ein Token im Link schlägt das Archiv: der geteilte Link ist der Moment, der
  * Commit nur die Aufzeichnung danach.
  *
  * @param {{ token: string, archiv: Archiv, jahr: number }} eingabe
@@ -35,7 +35,7 @@ export const chooseView = ({ token, archiv, jahr }) => {
       const ergebnis = decodeToken(token);
       return { art: 'ergebnis', quelle: 'link', ergebnis, vergangeneJahre: ohne(ergebnis.jahr) };
     } catch (fehler) {
-      return { art: 'fehler', grund: fehler.message, vergangeneJahre: ohne(null) };
+      return { art: 'fehler', grund: fehler.message, vergangeneJahre: pastYears(archiv) };
     }
   }
 
