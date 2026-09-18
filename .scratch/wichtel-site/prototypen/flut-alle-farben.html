@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8" />
+<title>Farbflut über den ganzen Topf</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 32px 20px 60px; background: #5f6461;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .galerie { display: flex; flex-wrap: wrap; gap: 26px 20px; justify-content: center; }
+  .spalte { width: 248px; }
+  .rahmen { width: 248px; height: 496px; border-radius: 18px; overflow: hidden;
+    position: relative; box-shadow: 0 12px 26px rgba(0,0,0,0.34); }
+  .grund, .schleier { position: absolute; inset: 0; }
+  .inhalt { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 22px 19px; }
+  .etikett { color: #fff; font-size: 12px; font-weight: 700; margin: 9px 0 0;
+    letter-spacing: 0.06em; display: flex; justify-content: space-between; }
+  .etikett span { font-weight: 500; opacity: 0.66; text-transform: uppercase; letter-spacing: 0.12em; }
+
+  /* Heller Grund traegt dunkle Schrift, dunkler Grund helle. */
+  .hell .schleier { background: linear-gradient(180deg, rgba(10,8,4,0.10), rgba(10,8,4,0.58)); }
+  .hell .inhalt { color: #fff; text-shadow: 0 1px 14px rgba(0,0,0,0.34); }
+  .hell .knopf-haupt { background: #fff; color: #1a1a1a; }
+  .hell .knopf-still { background: rgba(255,255,255,0.22); color: #fff; }
+
+  .dunkel .schleier { background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.52)); }
+  .dunkel .inhalt { color: #16181a; text-shadow: 0 1px 14px rgba(255,255,255,0.42); }
+  .dunkel .knopf-haupt { background: #16181a; color: #fff; }
+  .dunkel .knopf-still { background: rgba(0,0,0,0.13); color: #16181a; }
+
+  .jahr { font-size: 10px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.9; }
+  .riese { font-size: 190px; line-height: 0.82; font-weight: 800; letter-spacing: -0.06em; margin: auto 0 0 -8px; }
+  .farbwort { font-size: 38px; font-weight: 800; letter-spacing: -0.035em; margin-top: -2px; }
+  .satz { font-size: 11.5px; line-height: 1.45; margin: 7px 0 0; opacity: 0.92; }
+  .aktionen { margin-top: 16px; display: flex; flex-direction: column; gap: 7px; }
+  .knopf { appearance: none; border: 0; font: inherit; font-size: 12.5px; font-weight: 650;
+    border-radius: 999px; padding: 10px 14px; cursor: pointer; }
+</style></head>
+<body><div class="galerie">
+  <div class="spalte">
+    <div class="rahmen hell">
+      <div class="grund" style="background: #d33b33"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">Q</div>
+        <div class="farbwort">Rot</div>
+        <p class="satz">Das Geschenk fängt mit Q an und ist rot.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Rot <span>hell</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen hell">
+      <div class="grund" style="background: #2f6fd0"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">W</div>
+        <div class="farbwort">Blau</div>
+        <p class="satz">Das Geschenk fängt mit W an und ist blau.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Blau <span>hell</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen hell">
+      <div class="grund" style="background: #3a9e52"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">E</div>
+        <div class="farbwort">Grün</div>
+        <p class="satz">Das Geschenk fängt mit E an und ist grün.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Grün <span>hell</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: #e8cf3f"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">A</div>
+        <div class="farbwort">Gelb</div>
+        <p class="satz">Das Geschenk fängt mit A an und ist gelb.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Gelb <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: #e3892f"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">S</div>
+        <div class="farbwort">Orange</div>
+        <p class="satz">Das Geschenk fängt mit S an und ist orange.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Orange <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen hell">
+      <div class="grund" style="background: #8a4fc4"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">Z</div>
+        <div class="farbwort">Lila</div>
+        <p class="satz">Das Geschenk fängt mit Z an und ist lila.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Lila <span>hell</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: #e37fae"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">R</div>
+        <div class="farbwort">Rosa</div>
+        <p class="satz">Das Geschenk fängt mit R an und ist rosa.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Rosa <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: #2fb8ad"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">T</div>
+        <div class="farbwort">Türkis</div>
+        <p class="satz">Das Geschenk fängt mit T an und ist türkis.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Türkis <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen hell">
+      <div class="grund" style="background: #8a5a33"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">B</div>
+        <div class="farbwort">Braun</div>
+        <p class="satz">Das Geschenk fängt mit B an und ist braun.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Braun <span>hell</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen hell">
+      <div class="grund" style="background: #1b1b1b"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">M</div>
+        <div class="farbwort">Schwarz</div>
+        <p class="satz">Das Geschenk fängt mit M an und ist schwarz.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Schwarz <span>hell</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: #f4f4f0"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">N</div>
+        <div class="farbwort">Weiß</div>
+        <p class="satz">Das Geschenk fängt mit N an und ist weiß.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Weiß <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: #8d938f"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">K</div>
+        <div class="farbwort">Grau</div>
+        <p class="satz">Das Geschenk fängt mit K an und ist grau.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Grau <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: #ddceae"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">L</div>
+        <div class="farbwort">Beige</div>
+        <p class="satz">Das Geschenk fängt mit L an und ist beige.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Beige <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: linear-gradient(160deg, #f9e6a8, #c2932f 70%, #8f6a1c)"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">P</div>
+        <div class="farbwort">Gold</div>
+        <p class="satz">Das Geschenk fängt mit P an und ist gold.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Gold <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: linear-gradient(160deg, #f4f7f9, #9aa3a9 70%, #6f787e)"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">Ä</div>
+        <div class="farbwort">Silber</div>
+        <p class="satz">Das Geschenk fängt mit Ä an und ist silber.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Silber <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen hell">
+      <div class="grund" style="background: #1e3a73"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">Ö</div>
+        <div class="farbwort">Dunkelblau</div>
+        <p class="satz">Das Geschenk fängt mit Ö an und ist dunkelblau.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Dunkelblau <span>hell</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: #8ed06a"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">Ü</div>
+        <div class="farbwort">Hellgrün</div>
+        <p class="satz">Das Geschenk fängt mit Ü an und ist hellgrün.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Hellgrün <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen hell">
+      <div class="grund" style="background: #7a2233"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">G</div>
+        <div class="farbwort">Bordeaux</div>
+        <p class="satz">Das Geschenk fängt mit G an und ist bordeaux.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Bordeaux <span>hell</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: conic-gradient(from 210deg, #f6dd8c, #fff3c4, #d6a93c, #fffbe8, #e9c65a, #f6dd8c)"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">H</div>
+        <div class="farbwort">Glitzer</div>
+        <p class="satz">Das Geschenk fängt mit H an und ist glitzer.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Glitzer <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen hell">
+      <div class="grund" style="background: conic-gradient(#d33b33, #e8cf3f, #3a9e52, #2f6fd0, #8a4fc4, #d33b33)"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">J</div>
+        <div class="farbwort">Bunt</div>
+        <p class="satz">Das Geschenk fängt mit J an und ist bunt.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Bunt <span>hell</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: linear-gradient(150deg, #b6ff2e, #17f0d0)"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">Q</div>
+        <div class="farbwort">Neon</div>
+        <p class="satz">Das Geschenk fängt mit Q an und ist neon.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Neon <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: linear-gradient(150deg, #f7c9d9, #cfe3f7 55%, #d8f2d4)"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">W</div>
+        <div class="farbwort">Pastell</div>
+        <p class="satz">Das Geschenk fängt mit W an und ist pastell.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Pastell <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: repeating-linear-gradient(45deg, #f4f4f0 0 26px, #d33b33 26px 52px)"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">E</div>
+        <div class="farbwort">Gestreift</div>
+        <p class="satz">Das Geschenk fängt mit E an und ist gestreift.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Gestreift <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: repeating-conic-gradient(#d33b33 0% 25%, #f4f4f0 0% 50%) 0 / 84px 84px"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">A</div>
+        <div class="farbwort">Kariert</div>
+        <p class="satz">Das Geschenk fängt mit A an und ist kariert.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Kariert <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: radial-gradient(#1b1b1b 30%, #f4f4f0 32%) 0 / 46px 46px"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">S</div>
+        <div class="farbwort">Gepunktet</div>
+        <p class="satz">Das Geschenk fängt mit S an und ist gepunktet.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Gepunktet <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: repeating-conic-gradient(#e9ecef 0% 25%, #fbfcfd 0% 50%) 0 / 52px 52px"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">Z</div>
+        <div class="farbwort">Durchsichtig</div>
+        <p class="satz">Das Geschenk fängt mit Z an und ist durchsichtig.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Durchsichtig <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen dunkel">
+      <div class="grund" style="background: linear-gradient(150deg, #dde3e7, #7d878d 45%, #eef1f3 68%, #838d93)"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">R</div>
+        <div class="farbwort">Metallic</div>
+        <p class="satz">Das Geschenk fängt mit R an und ist metallic.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Metallic <span>dunkel</span></p>
+  </div>
+  <div class="spalte">
+    <div class="rahmen hell">
+      <div class="grund" style="background: linear-gradient(150deg, #d33b33, #e8892f, #e8cf3f, #3a9e52, #2f6fd0, #8a4fc4)"></div>
+      <div class="schleier"></div>
+      <div class="inhalt">
+        <div class="jahr">Wichteln 2026</div>
+        <div class="riese">T</div>
+        <div class="farbwort">Regenbogen</div>
+        <p class="satz">Das Geschenk fängt mit T an und ist regenbogen.</p>
+        <div class="aktionen">
+          <button class="knopf knopf-haupt">Link kopieren</button>
+          <button class="knopf knopf-still">Neu auslosen</button>
+        </div>
+      </div>
+    </div>
+    <p class="etikett">Regenbogen <span>hell</span></p>
+  </div></div></body></html>
