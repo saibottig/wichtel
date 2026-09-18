@@ -32,3 +32,24 @@ When you are working on something that would benefit from being informed by the 
 ## Voice Profile
 
 When you are talking/posting on behalf of the maintainer using their identity, read ~/VOICE.md to match the intended voice and communication style.
+
+## Agent skills
+
+### Issue tracker
+
+Issues and specs live as markdown files under `.scratch/<feature-slug>/`, one file per ticket.
+Commit them.
+Web sessions run in throwaway containers, so an uncommitted ticket is lost when the container is reclaimed.
+See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five canonical triage roles are used as-is, with no renaming.
+Because tickets are files rather than tracker objects, a label is a `Status:` line near the top of the file.
+See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout: `CONTEXT.md` and `docs/adr/` at the repo root.
+Neither exists yet, and neither should be created upfront.
+See `docs/agents/domain.md`.
