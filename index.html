@@ -13,27 +13,22 @@
     />
   </head>
   <body>
+    <div class="flut" aria-hidden="true">
+      <div class="flut-grund" id="flut-grund"></div>
+      <div class="flut-muster" id="flut-muster"></div>
+      <div class="flut-schleier"></div>
+    </div>
+
     <main class="buehne">
       <header class="kopf">
         <h1 class="titel">Wichteln</h1>
         <p class="unterzeile">Ein Buchstabe. Eine Farbe. Für alle gleich.</p>
       </header>
 
-      <section id="bereich-ergebnis" class="karte" hidden>
-        <p class="jahr" id="ergebnis-jahr"></p>
-        <div class="ziehung">
-          <div class="feld">
-            <span class="feld-name">Buchstabe</span>
-            <span class="feld-wert buchstabe" id="ergebnis-buchstabe">?</span>
-          </div>
-          <div class="feld">
-            <span class="feld-name">Farbe</span>
-            <span class="feld-wert farbe">
-              <span class="tupfer" id="ergebnis-tupfer" aria-hidden="true"></span>
-              <span id="ergebnis-farbname">?</span>
-            </span>
-          </div>
-        </div>
+      <section id="bereich-ergebnis" class="ergebnis" hidden>
+        <p class="jahr-pille"><span id="ergebnis-jahr"></span></p>
+        <p class="grossbuchstabe" id="ergebnis-buchstabe">?</p>
+        <p class="farbwort" id="ergebnis-farbname">?</p>
         <p class="regel" id="ergebnis-regel" role="status"></p>
         <div class="knopfreihe">
           <button type="button" class="knopf knopf-haupt" id="knopf-kopieren">Link kopieren</button>

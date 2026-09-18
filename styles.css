@@ -17,6 +17,13 @@
   box-sizing: border-box;
 }
 
+/* `hidden` muss jede Anzeigeart schlagen. Ohne das blieb der Ergebnis-Bereich
+   sichtbar, weil `.ergebnis { display: flex }` spezifischer ist als die
+   Regel des Browsers für [hidden]. */
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   margin: 0;
@@ -94,97 +101,122 @@ body {
   text-transform: uppercase;
 }
 
-/* Die Ziehung */
+/* Die Farbflut
 
-.ziehung {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
+   Die gezogene Farbe ist die Seite, nicht ein Feld darauf. Gemusterte Farben
+   liegen schwach über einer ruhigen Grundfarbe, sonst stünde der Text auf
+   gestreiftem Grund. Welcher Ton die Schrift trägt, sagt der Farbtopf. */
+
+.flut {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 620ms ease;
+  pointer-events: none;
 }
 
-@media (max-width: 460px) {
-  .ziehung {
-    grid-template-columns: 1fr;
-  }
+.flutet .flut { opacity: 1; }
+
+.flut-grund,
+.flut-muster,
+.flut-schleier {
+  position: absolute;
+  inset: 0;
 }
 
-.feld {
+.flutet.ton-hell .flut-schleier {
+  background: linear-gradient(180deg, rgba(10, 10, 14, 0.04), rgba(10, 10, 14, 0.44));
+}
+
+.flutet.ton-dunkel .flut-schleier {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.36));
+}
+
+/* Auf der Flut trägt die Schrift den Ton, den die Farbe vorgibt. */
+.flutet.ton-hell {
+  --schrift: #ffffff;
+  --schrift-leise: rgba(255, 255, 255, 0.82);
+  --pille: rgba(0, 0, 0, 0.26);
+  --linie: rgba(255, 255, 255, 0.24);
+}
+
+.flutet.ton-dunkel {
+  --schrift: #16181a;
+  --schrift-leise: rgba(22, 24, 26, 0.72);
+  --pille: rgba(255, 255, 255, 0.42);
+  --linie: rgba(0, 0, 0, 0.14);
+}
+
+.flutet .kopf { display: none; }
+
+.buehne { position: relative; z-index: 1; }
+
+/* Das Ergebnis */
+
+.ergebnis {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding: 22px 12px;
-  background: rgba(255, 255, 255, 0.032);
-  border: 1px solid var(--linie);
-  border-radius: 14px;
+  min-height: 74vh;
+  color: var(--schrift);
 }
 
-.feld-name {
-  color: var(--schrift-leise);
+.jahr-pille { margin: 0; }
+
+.jahr-pille span {
+  display: inline-block;
+  padding: 6px 13px;
+  border-radius: 999px;
+  background: var(--pille);
   font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
+  font-weight: 700;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 
-.feld-wert {
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
+.grossbuchstabe {
+  margin: auto 0 0;
+  font-size: clamp(9rem, 46vw, 15rem);
+  /* Über eins, damit die Unterlänge von J und Q im Kasten bleibt und nicht
+     ins Farbwort darunter läuft. */
+  line-height: 1.1;
+  font-weight: 800;
+  letter-spacing: -0.06em;
 }
 
-.buchstabe {
-  font-size: clamp(3.6rem, 16vw, 5.2rem);
-  line-height: 1;
-  color: var(--gold);
-  /* Hält die Höhe stabil, während die Buchstaben durchlaufen. */
-  min-height: 1em;
-  display: flex;
-  align-items: center;
+.farbwort {
+  margin: 0;
+  font-size: clamp(2rem, 11vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  /* Durchsichtig und Regenbogen sind die längsten Namen im Topf. */
+  overflow-wrap: anywhere;
 }
 
-.farbe {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  font-size: clamp(1.25rem, 5.4vw, 1.7rem);
-  min-height: 1.6em;
-  text-align: center;
-}
-
-.tupfer {
-  flex: none;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.22);
-}
-
-.laeuft .buchstabe,
-.laeuft .farbe {
-  opacity: 0.72;
-  filter: blur(0.35px);
-}
-
-.gelandet .buchstabe {
-  animation: landen 520ms cubic-bezier(0.22, 1.4, 0.36, 1);
-}
-
-@keyframes landen {
-  0% {
-    transform: scale(0.72);
-    opacity: 0.4;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.regel {
-  margin: 22px 0 0;
+.ergebnis .regel {
+  margin: 12px 0 0;
   color: var(--schrift-leise);
-  font-size: 0.95rem;
+  font-size: 1rem;
+}
+
+.ergebnis .knopfreihe { margin-top: 24px; justify-content: flex-start; }
+
+.flutet.ton-hell .knopf-haupt { background: #ffffff; color: #1a1a1a; }
+.flutet.ton-hell .knopf-still { background: rgba(255, 255, 255, 0.22); color: #ffffff; }
+.flutet.ton-dunkel .knopf-haupt { background: #16181a; color: #ffffff; }
+.flutet.ton-dunkel .knopf-still { background: rgba(0, 0, 0, 0.12); color: #16181a; }
+
+.flutet .jahreszeile { background: var(--pille); border-color: var(--linie); }
+.flutet .jahreszeile .jahreszahl,
+.flutet .vergangenes-titel { color: var(--schrift-leise); }
+.flutet .jahreszeile .jahres-buchstabe { color: var(--schrift); }
+.flutet .jahreszeile .jahres-farbe { color: var(--schrift); }
+
+/* Ein Tupfer in der Nähe der gefluteten Farbe verschwindet sonst darin. */
+.flutet .jahreszeile .tupfer {
+  border-color: transparent;
+  box-shadow: 0 0 0 1.5px var(--schrift-leise);
 }
 
 .einladung {

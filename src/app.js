@@ -10,7 +10,7 @@ import { draw, waehleAus } from './draw.js';
 import { encodeToken } from './token.js';
 import { chooseView } from './view.js';
 import { pastYears } from './archive.js';
-import { BUCHSTABEN, FARBEN, tupferFuer } from './pool.js';
+import { BUCHSTABEN, FARBEN, darstellungFuer, tupferFuer } from './pool.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -37,9 +37,36 @@ const knoepfeSperren = (gesperrt) => {
   }
 };
 
+/**
+ * Lässt die gezogene Farbe die ganze Seite einnehmen.
+ *
+ * Ein Muster liegt schwach über seiner Grundfarbe, sonst stünde der Text auf
+ * gestreiftem Grund. Ungemusterte Farben laufen in voller Stärke durch, denn
+ * an einer einzelnen Farbe gäbe es nichts zu dämpfen.
+ */
+const flutSetzen = (farbe) => {
+  const { flut, ton, daempfung } = darstellungFuer(farbe);
+
+  $('flut-grund').style.background = daempfung ? daempfung.basis : flut;
+  $('flut-muster').style.background = daempfung ? flut : 'none';
+  $('flut-muster').style.opacity = daempfung ? String(daempfung.staerke) : '0';
+
+  // Die Flut liegt fest am Fenster. Der Körper bekommt denselben Grund, damit
+  // beim Überscrollen nichts vom alten Grün auftaucht. Kurzschreibweise, weil
+  // die Hälfte der Farben Verläufe sind und backgroundColor die nicht nimmt.
+  document.body.style.background = daempfung ? daempfung.basis : flut;
+  document.body.classList.add('flutet');
+  document.body.classList.toggle('ton-hell', ton === 'hell');
+  document.body.classList.toggle('ton-dunkel', ton === 'dunkel');
+};
+
+const flutLoeschen = () => {
+  document.body.style.background = '';
+  document.body.classList.remove('flutet', 'ton-hell', 'ton-dunkel');
+};
+
 const zeigeFarbe = (farbe) => {
   $('ergebnis-farbname').textContent = farbe;
-  $('ergebnis-tupfer').style.background = tupferFuer(farbe);
 };
 
 const schreibeErgebnis = ({ jahr, buchstabe, farbe }) => {
@@ -48,6 +75,7 @@ const schreibeErgebnis = ({ jahr, buchstabe, farbe }) => {
   zeigeFarbe(farbe);
   $('ergebnis-regel').textContent =
     `Das Geschenk fängt mit ${buchstabe} an und ist ${farbe.toLowerCase()}.`;
+  flutSetzen(farbe);
 };
 
 const zeigeVergangeneJahre = (jahre) => {
@@ -125,6 +153,8 @@ const auslosen = async (archiv, jahr) => {
   knoepfeSperren(true);
   $('kopier-rueckmeldung').textContent = '';
   $('ergebnis-jahr').textContent = `Wichteln ${jahr}`;
+  // Die Farbe bricht erst beim Landen herein, sonst verpufft der Moment.
+  flutLoeschen();
   zeigeBereich('ergebnis');
 
   await laufenLassen();
@@ -157,9 +187,11 @@ const zeichnen = (archiv, jahr) => {
     schreibeErgebnis(ansicht.ergebnis);
     zeigeBereich('ergebnis');
   } else if (ansicht.art === 'auslosung') {
+    flutLoeschen();
     $('auslosung-jahr').textContent = `Wichteln ${ansicht.jahr}`;
     zeigeBereich('auslosung');
   } else {
+    flutLoeschen();
     // Der genaue Grund ist für das Archiv-Skript gedacht, nicht für die Gruppe.
     $('fehler-grund').textContent =
       'Wahrscheinlich ist er beim Weiterleiten abgeschnitten worden. Lost einfach neu aus.';
