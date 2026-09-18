@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ergebnis-Seite, fünf Richtungen</title>
+    <style>
+      /* Wegwerf-Prototyp. Fünf Richtungen für die Ergebnis-Seite, gleiches
+         Ergebnis in allen: Wichteln 2026, Q, Glitzer. Nur Systemschriften,
+         damit das Gewählte auch so aussieht, wenn es in die echte Seite geht. */
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        padding: 40px 24px 64px;
+        background: #6b6f6c;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      .galerie {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 44px;
+        justify-content: center;
+        align-items: flex-start;
+      }
+      .spalte { width: 390px; }
+      .etikett {
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin: 0 0 4px;
+      }
+      .beschreibung {
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 0 0 14px;
+        min-height: 3em;
+      }
+      .rahmen {
+        width: 390px;
+        height: 780px;
+        border-radius: 26px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 22px 48px rgba(0, 0, 0, 0.36);
+      }
+      .flaeche {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 40px 30px;
+      }
+      .knopf {
+        appearance: none;
+        border: 0;
+        font: inherit;
+        font-weight: 650;
+        cursor: pointer;
+        border-radius: 999px;
+        padding: 14px 22px;
+      }
+      .aktionen { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
+
+      /* ---------- 1. Plakat ---------- */
+      .plakat { background: #f2efe6; color: #16181a; }
+      .plakat .kopfzeile {
+        display: flex; justify-content: space-between;
+        font-size: 11px; font-weight: 700; letter-spacing: 0.2em;
+        text-transform: uppercase; color: #16181a;
+        padding-bottom: 12px; border-bottom: 1.5px solid #16181a;
+      }
+      .plakat .riese {
+        font-size: 296px; line-height: 0.82; font-weight: 800;
+        letter-spacing: -0.05em; margin: 30px 0 30px -14px;
+      }
+      .plakat .farbzeile {
+        display: flex; align-items: baseline; gap: 14px;
+        margin-top: 6px; border-top: 1.5px solid #16181a; padding-top: 14px;
+      }
+      .plakat .farbwort { font-size: 46px; font-weight: 800; letter-spacing: -0.03em; }
+      .plakat .satz { margin-top: 18px; font-size: 15px; line-height: 1.5; max-width: 26ch; color: #3d4247; }
+      .plakat .knopf-haupt { background: #16181a; color: #f2efe6; }
+      .plakat .knopf-still { background: transparent; color: #16181a; box-shadow: inset 0 0 0 1.5px #16181a; }
+
+      /* ---------- 2. Geschenkanhänger ---------- */
+      .anhaenger-buehne {
+        background: radial-gradient(120% 90% at 50% 0%, #26493a 0%, #14261f 60%, #0d1b17 100%);
+        align-items: center; justify-content: center; padding: 34px 26px;
+      }
+      .schnur { width: 2px; height: 46px; background: #c9b489; margin-bottom: -6px; }
+      .tag {
+        width: 296px; background: linear-gradient(170deg, #f6f1e3, #e8e0cc);
+        color: #2b2620; border-radius: 12px; padding: 54px 30px 34px;
+        text-align: center; position: relative; transform: rotate(-2.2deg);
+        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.42);
+        font-family: Georgia, "Times New Roman", serif;
+        clip-path: polygon(0 34px, 34px 0, 100% 0, 100% 100%, 0 100%);
+      }
+      .loch {
+        position: absolute; top: 22px; left: 50%; transform: translateX(-50%);
+        width: 15px; height: 15px; border-radius: 50%;
+        background: #14261f; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+      }
+      .tag .fuer { font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: #8a7f6d; }
+      .tag .jahr { font-size: 15px; font-style: italic; color: #6d6353; margin-top: 4px; }
+      .tag .riese { font-size: 132px; line-height: 1; font-weight: 700; margin: 6px 0 2px; }
+      .tag .trenn { width: 54px; height: 1px; background: #bfb39a; margin: 14px auto; }
+      .tag .farbe { font-size: 27px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+      .tag .satz { font-size: 13px; color: #6d6353; margin-top: 14px; line-height: 1.5; font-style: italic; }
+      .anhaenger-buehne .aktionen { width: 296px; }
+      .anhaenger-buehne .knopf-haupt { background: #e8dcc0; color: #2b2620; }
+      .anhaenger-buehne .knopf-still { background: rgba(255,255,255,0.09); color: #e9efe9; }
+
+      /* ---------- 3. Farbflut ---------- */
+      .flut { color: #fff; padding: 34px 30px; }
+      .flut > * { position: relative; z-index: 1; }
+      .flut > .flut-grund,
+      .flut > .flut-schleier { position: absolute; inset: 0; z-index: 0; }
+      .flut > .flut-grund {
+        background: conic-gradient(from 210deg, #f6dd8c, #fff3c4, #d6a93c, #fffbe8, #e9c65a, #f6dd8c);
+      }
+      .flut > .flut-schleier { background: linear-gradient(180deg, rgba(20,14,0,0.10), rgba(20,14,0,0.58)); }
+      .flut .jahr { font-size: 12px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; opacity: 0.92; }
+      .flut .riese {
+        font-size: 300px; line-height: 0.8; font-weight: 800; letter-spacing: -0.06em;
+        margin: auto 0 0 -12px; text-shadow: 0 8px 40px rgba(60,40,0,0.35);
+      }
+      .flut .farbwort { font-size: 62px; font-weight: 800; letter-spacing: -0.035em; margin-top: -4px; }
+      .flut .satz { font-size: 15px; margin-top: 10px; opacity: 0.94; line-height: 1.5; }
+      .flut .aktionen { margin-top: 26px; }
+      .flut .knopf-haupt { background: #fff; color: #4a3608; }
+      .flut .knopf-still { background: rgba(255,255,255,0.2); color: #fff; backdrop-filter: blur(6px); }
+
+      /* ---------- 4. Adventstürchen ---------- */
+      .advent {
+        background: repeating-linear-gradient(115deg, #1c3b2e 0 26px, #1a372b 26px 52px);
+        align-items: center; justify-content: center; gap: 26px; padding: 34px 28px;
+      }
+      .tuer-rahmen {
+        width: 290px; height: 330px; position: relative;
+        perspective: 900px;
+      }
+      .nische {
+        position: absolute; inset: 0; border-radius: 10px;
+        background: radial-gradient(90% 80% at 50% 42%, #fff5d6 0%, #e8c877 42%, #8a6a1e 100%);
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        color: #3a2c06; box-shadow: inset 0 0 40px rgba(90,64,10,0.55);
+      }
+      .nische .riese { font-size: 146px; line-height: 1; font-weight: 800; letter-spacing: -0.04em; }
+      .nische .farbe { font-size: 26px; font-weight: 700; display: flex; align-items: center; gap: 10px; margin-top: 2px; }
+      .tuer {
+        position: absolute; inset: 0; border-radius: 10px;
+        background: linear-gradient(120deg, #d8564f, #a8352f);
+        transform-origin: left center; transform: rotateY(-143deg);
+        box-shadow: 6px 0 26px rgba(0,0,0,0.45);
+        display: flex; align-items: center; justify-content: center;
+        border: 2px solid rgba(255,255,255,0.14);
+      }
+      .tuer span { color: rgba(255,255,255,0.5); font-size: 58px; font-weight: 800; transform: scaleX(-1); }
+      .advent .jahr { color: #e8c877; font-size: 12px; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; }
+      .advent .satz { color: #cfe0d4; font-size: 14px; text-align: center; line-height: 1.5; max-width: 28ch; }
+      .advent .aktionen { width: 290px; }
+      .advent .knopf-haupt { background: #e8c877; color: #3a2c06; }
+      .advent .knopf-still { background: rgba(255,255,255,0.09); color: #e9efe9; }
+
+      /* ---------- 5. Los ---------- */
+      .los-buehne { background: #23262b; align-items: center; justify-content: center; padding: 30px 24px; }
+      .los {
+        width: 310px; background: #f7f4ec; color: #1d2024; border-radius: 6px;
+        position: relative; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        box-shadow: 0 16px 34px rgba(0,0,0,0.5);
+      }
+      .los::before, .los::after {
+        content: ""; position: absolute; left: 0; right: 0; height: 10px;
+        background: radial-gradient(circle at 5px 5px, #23262b 4px, transparent 4.5px) 0 0 / 14px 10px repeat-x;
+      }
+      .los::before { top: -5px; }
+      .los::after { bottom: -5px; transform: rotate(180deg); }
+      .los .kopf {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 18px 20px; border-bottom: 2px dashed #c9c3b4;
+        font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6b6558;
+      }
+      .los .stempel {
+        color: #b23b33; border: 2px solid #b23b33; border-radius: 4px;
+        padding: 3px 8px; font-weight: 700; transform: rotate(-5deg); letter-spacing: 0.1em;
+      }
+      .los .koerper { padding: 26px 20px 24px; text-align: center; }
+      .los .kleinzeile { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #6b6558; }
+      .los .riese { font-size: 128px; line-height: 1; font-weight: 700; letter-spacing: -0.03em; margin: 2px 0 10px; }
+      .los .farbe {
+        font-size: 24px; font-weight: 700; display: flex; align-items: center;
+        justify-content: center; gap: 10px; letter-spacing: -0.01em;
+      }
+      .los .fuss {
+        border-top: 2px dashed #c9c3b4; padding: 14px 20px;
+        font-size: 11px; color: #6b6558; display: flex; justify-content: space-between;
+      }
+      .los-buehne .aktionen { width: 310px; }
+      .los-buehne .knopf-haupt { background: #f7f4ec; color: #1d2024; }
+      .los-buehne .knopf-still { background: rgba(255,255,255,0.1); color: #f0eee7; }
+
+      .tupfer {
+        width: 26px; height: 26px; border-radius: 50%; flex: none;
+        background: conic-gradient(#f6dd8c, #fff3c4, #d6a93c, #fffbe8, #f6dd8c);
+        border: 1px solid rgba(0, 0, 0, 0.18);
+      }
+      .tupfer-hell { border-color: rgba(255, 255, 255, 0.5); }
+    </style>
+  </head>
+  <body>
+    <div class="galerie">
+      <!-- 1 -->
+      <div class="spalte">
+        <p class="etikett">1 &middot; Plakat</p>
+        <p class="beschreibung">Redaktionell, ruhig, hell. Der Buchstabe ist das Bild, sonst nichts.</p>
+        <div class="rahmen"><div class="flaeche plakat" id="v1">
+          <div class="kopfzeile"><span>Wichteln</span><span>2026</span></div>
+          <div class="riese">Q</div>
+          <div class="farbzeile"><span class="tupfer"></span><span class="farbwort">Glitzer</span></div>
+          <p class="satz">Das Geschenk fängt mit Q an und ist glitzernd.</p>
+          <div class="aktionen">
+            <button class="knopf knopf-haupt">Link kopieren</button>
+            <button class="knopf knopf-still">Neu auslosen</button>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- 2 -->
+      <div class="spalte">
+        <p class="etikett">2 &middot; Geschenkanhänger</p>
+        <p class="beschreibung">Ein Papieranhänger mit Loch und Schnur. Warm, handfest, am nächsten am echten Wichteln.</p>
+        <div class="rahmen"><div class="flaeche anhaenger-buehne" id="v2">
+          <div class="schnur"></div>
+          <div class="tag">
+            <span class="loch"></span>
+            <div class="fuer">Für die Gruppe</div>
+            <div class="jahr">Wichteln 2026</div>
+            <div class="riese">Q</div>
+            <div class="trenn"></div>
+            <div class="farbe"><span class="tupfer"></span>Glitzer</div>
+            <p class="satz">Das Geschenk fängt mit Q an und ist glitzernd.</p>
+          </div>
+          <div class="aktionen">
+            <button class="knopf knopf-haupt">Link kopieren</button>
+            <button class="knopf knopf-still">Neu auslosen</button>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- 3 -->
+      <div class="spalte">
+        <p class="etikett">3 &middot; Farbflut</p>
+        <p class="beschreibung">Die gezogene Farbe ist die Seite. Jedes Jahr sieht völlig anders aus. Lautester Vorschlag.</p>
+        <div class="rahmen"><div class="flaeche flut" id="v3">
+          <div class="flut-grund"></div><div class="flut-schleier"></div>
+          <div class="jahr">Wichteln 2026</div>
+          <div class="riese">Q</div>
+          <div class="farbwort">Glitzer</div>
+          <p class="satz">Das Geschenk fängt mit Q an und ist glitzernd.</p>
+          <div class="aktionen">
+            <button class="knopf knopf-haupt">Link kopieren</button>
+            <button class="knopf knopf-still">Neu auslosen</button>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- 4 -->
+      <div class="spalte">
+        <p class="etikett">4 &middot; Adventstürchen</p>
+        <p class="beschreibung">Das Ergebnis liegt hinter einem geöffneten Türchen. Verspielt und eindeutig deutsch-weihnachtlich.</p>
+        <div class="rahmen"><div class="flaeche advent" id="v4">
+          <div class="jahr">Wichteln 2026</div>
+          <div class="tuer-rahmen">
+            <div class="nische">
+              <div class="riese">Q</div>
+              <div class="farbe"><span class="tupfer"></span>Glitzer</div>
+            </div>
+            <div class="tuer"><span>24</span></div>
+          </div>
+          <p class="satz">Das Geschenk fängt mit Q an und ist glitzernd.</p>
+          <div class="aktionen">
+            <button class="knopf knopf-haupt">Link kopieren</button>
+            <button class="knopf knopf-still">Neu auslosen</button>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- 5 -->
+      <div class="spalte">
+        <p class="etikett">5 &middot; Los</p>
+        <p class="beschreibung">Ein abgerissener Losabschnitt. Nimmt das Wort Auslosung wörtlich.</p>
+        <div class="rahmen"><div class="flaeche los-buehne" id="v5">
+          <div class="los">
+            <div class="kopf"><span>Wichtel-Los</span><span class="stempel">Gezogen</span></div>
+            <div class="koerper">
+              <div class="kleinzeile">Buchstabe</div>
+              <div class="riese">Q</div>
+              <div class="kleinzeile" style="margin-bottom:6px">Farbe</div>
+              <div class="farbe"><span class="tupfer"></span>Glitzer</div>
+            </div>
+            <div class="fuss"><span>Jahrgang 2026</span><span>Nr. 026</span></div>
+          </div>
+          <div class="aktionen">
+            <button class="knopf knopf-haupt">Link kopieren</button>
+            <button class="knopf knopf-still">Neu auslosen</button>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  </body>
+</html>
