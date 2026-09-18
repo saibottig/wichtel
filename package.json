@@ -1,0 +1,10 @@
+{
+  "name": "wichtel",
+  "private": true,
+  "type": "module",
+  "description": "Wichtel-Auslosung: ein Buchstabe und eine Farbe pro Jahr.",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "archivieren": "node scripts/archivieren.mjs"
+  }
+}

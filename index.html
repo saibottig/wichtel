@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wichteln</title>
+    <meta name="description" content="Ein Buchstabe und eine Farbe pro Jahr, ausgelost für die ganze Gruppe." />
+    <meta name="color-scheme" content="dark light" />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>"
+    />
+  </head>
+  <body>
+    <main class="buehne">
+      <header class="kopf">
+        <h1 class="titel">Wichteln</h1>
+        <p class="unterzeile">Ein Buchstabe. Eine Farbe. Für alle gleich.</p>
+      </header>
+
+      <section id="bereich-ergebnis" class="karte" hidden>
+        <p class="jahr" id="ergebnis-jahr"></p>
+        <div class="ziehung">
+          <div class="feld">
+            <span class="feld-name">Buchstabe</span>
+            <span class="feld-wert buchstabe" id="ergebnis-buchstabe">?</span>
+          </div>
+          <div class="feld">
+            <span class="feld-name">Farbe</span>
+            <span class="feld-wert farbe" id="ergebnis-farbe">
+              <span class="tupfer" id="ergebnis-tupfer" aria-hidden="true"></span>
+              <span id="ergebnis-farbname">?</span>
+            </span>
+          </div>
+        </div>
+        <p class="regel" id="ergebnis-regel" role="status"></p>
+        <div class="knopfreihe">
+          <button type="button" class="knopf knopf-haupt" id="knopf-kopieren">Link kopieren</button>
+          <button type="button" class="knopf knopf-still" id="knopf-neu">Neu auslosen</button>
+        </div>
+        <p class="hinweis" id="kopier-rueckmeldung" role="status"></p>
+      </section>
+
+      <section id="bereich-auslosung" class="karte" hidden>
+        <p class="jahr" id="auslosung-jahr"></p>
+        <p class="einladung">Noch nichts gezogen. Los geht es mit einem Klick.</p>
+        <div class="knopfreihe">
+          <button type="button" class="knopf knopf-haupt knopf-gross" id="knopf-auslosen">
+            Auslosen
+          </button>
+        </div>
+      </section>
+
+      <section id="bereich-fehler" class="karte karte-fehler" hidden>
+        <h2 class="fehler-titel">Der Link lässt sich nicht lesen</h2>
+        <p class="hinweis" id="fehler-grund"></p>
+        <div class="knopfreihe">
+          <button type="button" class="knopf knopf-haupt" id="knopf-fehler-auslosen">
+            Neu auslosen
+          </button>
+        </div>
+      </section>
+
+      <section class="vergangenes" id="bereich-vergangenes" hidden>
+        <h2 class="vergangenes-titel">Vergangene Jahre</h2>
+        <ul class="jahresliste" id="jahresliste"></ul>
+      </section>
+    </main>
+
+    <script type="module" src="src/app.js"></script>
+  </body>
+</html>
