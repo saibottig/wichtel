@@ -1,7 +1,7 @@
 # Add the DNS record at Cloudflare
 
 Type: task
-Status: open
+Status: resolved
 
 ## Question
 

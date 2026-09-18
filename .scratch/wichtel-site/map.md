@@ -7,6 +7,10 @@ Label: wayfinder:map
 A static site live at https://wichtel.turbodev.eu that draws one starting letter and one colour per year for the group, shares that result as a link, and lists the draws from previous years.
 Reaching the destination means the site is deployed and reachable at that address, not merely specified.
 
+**Reached.**
+The site answers at that address over HTTPS and was opened and checked there.
+What remains below is not the destination: one settings checkbox on ticket 02, and one question in the fog.
+
 ## Notes
 
 Execution is in scope for this map.
@@ -43,7 +47,8 @@ They are not up for re-litigation without a new reason.
 - [Curate the colour pool](issues/05-curate-the-colour-pool.md): about 28 entries in one flat list, ordinary and wild mixed, sized so repeats stay unlikely for over a decade. Nothing is excluded for being hard to shop for.
 - [Archive format for past years](issues/06-archive-format-for-past-years.md): archiving is a maintainer job, invisible to participants. A repository script takes the token, decodes it, and writes the year into the archive JSON. The page gains no archiving UI.
 - [Prototype the draw and the reveal](issues/07-prototype-the-draw-and-reveal.md): no throwaway prototype was built, because nothing was left open for one to answer. The reveal cycles for about two seconds and decelerates into the result, and stands still under `prefers-reduced-motion`.
-- [Build and deploy the site](issues/08-build-and-deploy-the-site.md): built and pushed to `master`, four pure modules behind a thin DOM adapter. Not yet reachable, because the DNS record is still missing. Worth checking whether the custom domain setting survived the deletion of the scratch branch.
+- [Add the DNS record at Cloudflare](issues/02-dns-record-at-cloudflare.md): done by the account holder. The DNS check passes and the certificate is active. Setting the custom domain again also restored the `CNAME` on `master`, which the deleted scratch branch had taken with it.
+- [Build and deploy the site](issues/08-build-and-deploy-the-site.md): built, pushed and live. Four pure modules behind a thin DOM adapter, no build step, published from `master`.
 
 ## Not yet specified
 

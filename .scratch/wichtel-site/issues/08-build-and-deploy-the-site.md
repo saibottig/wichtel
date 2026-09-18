@@ -1,8 +1,7 @@
 # Build and deploy the site
 
 Type: task
-Status: open
-Blocked by: 02
+Status: resolved
 
 ## Question
 
@@ -45,3 +44,22 @@ Zum Abhaken reicht ein Blick auf https://wichtel.turbodev.eu:
 - lädt über HTTPS ohne Zertifikatswarnung,
 - der Knopf "Auslosen" lässt Buchstaben und Farbe durchlaufen und landet,
 - der geteilte Link zeigt in einem neuen Tab dasselbe Ergebnis.
+
+## Answer
+
+Erledigt. Die Seite steht unter https://wichtel.turbodev.eu und wurde dort vom Account-Inhaber geöffnet und geprüft.
+
+Damit ist das Ziel der Karte erreicht, und zwar in dem Sinn, den die Karte meint: erreichbar, nicht bloß spezifiziert.
+
+**Was ausgeliefert wird.**
+Eine statische Seite ohne Build-Schritt, veröffentlicht aus dem Wurzelverzeichnis von `master`.
+`index.html`, `styles.css`, `src/` mit vier reinen Modulen hinter einer dünnen DOM-Schicht, `archiv.json`, `.nojekyll`.
+Die `CNAME` hat GitHub selbst geschrieben, als die eigene Domain gesetzt wurde.
+
+**Was der Ausrichter noch in die Hand nimmt.**
+Nach der Auslosung einmal `npm run archivieren -- '<geteilter Link>'` laufen lassen und die geänderte `archiv.json` committen.
+Danach zeigt die Seite das Jahr unter "Vergangene Jahre", und wer sie ohne Link öffnet, sieht das Ergebnis des laufenden Jahres statt einer Einladung zum Auslosen.
+
+**Was offen bleibt und hier bewusst nicht mitabgehakt wird.**
+"Enforce HTTPS" in den Repository-Einstellungen, das GitHub erst bis zu 24 Stunden nach der DNS-Prüfung freigibt. Siehe Ticket 02.
+Und der Jahreswechsel im Januar, der in der Karte unter "Not yet specified" steht.
