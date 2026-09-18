@@ -1,0 +1,75 @@
+# The skills.sh installer (`npx skills@latest add mattpocock/skills`) fans the
+# skills out to every coding agent it knows about, plus its own staging dirs.
+# This repo only uses Claude Code, so only .claude/skills/ is tracked.
+# Patterns are root-anchored so they never hide .claude/skills/ itself.
+
+/.adal/
+/.agents/
+/.aider-desk/
+/.augment/
+/.autohand/
+/.bob/
+/.codeartsdoer/
+/.codebuddy/
+/.codemaker/
+/.codestudio/
+/.commandcode/
+/.continue/
+/.cortex/
+/.crush/
+/.devin/
+/.forge/
+/.fx/
+/.goose/
+/.grok/
+/.hermes/
+/.iflow/
+/.inferencesh/
+/.jazz/
+/.junie/
+/.kimchi/
+/.kiro/
+/.kode/
+/.lingma/
+/.mcpjam/
+/.minimax/
+/.moxby/
+/.mux/
+/.neovate/
+/.ona/
+/.openhands/
+/.pi/
+/.pochi/
+/.posit/
+/.qoder/
+/.qwen/
+/.reasonix/
+/.roo/
+/.rovodev/
+/.tabnine/
+/.terramind/
+/.tinycloud/
+/.trae/
+/.vibe/
+/.windsurf/
+/.zcode/
+/.zencoder/
+/agent/
+/data/
+/skills/
+
+# Upstream's in-progress and misc drafts. `--skill '*'` installs them, but they
+# are not part of the documented set. Delete a line here to start tracking one.
+/.claude/skills/claude-handoff/
+/.claude/skills/git-guardrails-claude-code/
+/.claude/skills/implement-spec/
+/.claude/skills/loop-me/
+/.claude/skills/migrate-to-shoehorn/
+/.claude/skills/pr/
+/.claude/skills/retro/
+/.claude/skills/scaffold-exercises/
+/.claude/skills/setup-pre-commit/
+/.claude/skills/setup-ts-deep-modules/
+/.claude/skills/writing-beats/
+/.claude/skills/writing-fragments/
+/.claude/skills/writing-shape/
