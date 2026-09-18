@@ -30,3 +30,18 @@ Ticket 01 hält fest, die eigene Domain sei in den Einstellungen bereits gesetzt
 Dann müsste GitHub eine `CNAME` in den Veröffentlichungszweig geschrieben haben, und auf `master` liegt keine.
 Naheliegende Erklärung: das geschah, als noch der inzwischen gelöschte Scratch-Zweig der Standardzweig war, und die Datei ist mit ihm verschwunden.
 Ist das so, muss die eigene Domain in den Einstellungen neu gesetzt werden, sonst antwortet die Seite später unter der eigenen Adresse nicht.
+
+## Stand nach dem DNS-Eintrag
+
+Ticket 02 ist erledigt, die `CNAME` liegt auf `master`, das Zertifikat ist aktiv.
+Damit ist alles getan, was in diesem Repository getan werden kann.
+
+Offen bleibt genau eine Sache, und sie ist mit Absicht nicht abgehakt: niemand hat die Seite unter ihrer eigenen Adresse geöffnet.
+Die Agent-Sitzung kann es nicht, weil die Netzwerk-Richtlinie dieser Umgebung die Verbindung nach `wichtel.turbodev.eu:443` mit 403 ablehnt.
+Die Karte ist an dieser Stelle deutlich: erreichbar zählt, spezifiziert nicht.
+
+Zum Abhaken reicht ein Blick auf https://wichtel.turbodev.eu:
+
+- lädt über HTTPS ohne Zertifikatswarnung,
+- der Knopf "Auslosen" lässt Buchstaben und Farbe durchlaufen und landet,
+- der geteilte Link zeigt in einem neuen Tab dasselbe Ergebnis.
