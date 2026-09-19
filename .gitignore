@@ -76,3 +76,6 @@
 
 # Node-Abhaengigkeiten, falls je welche dazukommen.
 /node_modules/
+
+# Bildschirmfotos der Entwurfsrunden. Werkzeugausgabe, kein Inhalt.
+/.scratch/wichtel-site/prototypen/*/bilder/

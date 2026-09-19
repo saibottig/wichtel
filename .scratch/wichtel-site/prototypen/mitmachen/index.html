@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fünf Enthüllungen zum Mitmachen</title>
+    <link rel="stylesheet" href="buehne.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="kopf">
+      <h1>Fünf Enthüllungen zum Mitmachen</h1>
+      <p>
+        Hier läuft nichts von selbst. Unter jeder Decke liegen zwei Felder, eines mit dem
+        Buchstaben und eines mit der Farbe, und beide werden einzeln freigelegt. Damit das eine
+        Feld das andere nicht verrät, steht der Buchstabe in neutraler Tinte auf Papier: die
+        gezogene Farbe bekommt die Seite erst, wenn beide Felder offen sind.
+      </p>
+      <p>
+        Alle fünf spielen dieselbe Ziehung, damit verglichen wird und nicht geraten. Die Farben
+        kommen aus <code>src/pool.js</code>, also aus dem echten Topf. Die fünfte Karte hält sich
+        nicht an die Regel mit den zwei Feldern, und das ist ihre Frage: eine Geste für beides.
+      </p>
+      <p class="warnung" id="warnung" hidden></p>
+
+      <div class="steuerung">
+        <label>
+          Farbe
+          <select id="wahl-farbe"></select>
+        </label>
+        <label>
+          Buchstabe
+          <select id="wahl-buchstabe"></select>
+        </label>
+        <button type="button" class="knopf knopf-haupt" id="wuerfeln">Neu würfeln</button>
+        <button type="button" class="knopf" id="alle-zurueck">Alle zudecken</button>
+        <p class="ziehung" id="ziehung"></p>
+      </div>
+    </header>
+
+    <main class="galerie" id="galerie"></main>
+
+    <div class="lupe" id="lupe" hidden>
+      <div class="lupe-platz" id="lupe-platz"></div>
+      <button type="button" class="knopf lupe-zu" id="lupe-zu">Schließen</button>
+    </div>
+
+    <script type="module" src="galerie.js"></script>
+  </body>
+</html>
