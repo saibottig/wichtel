@@ -32,24 +32,21 @@ const ZIEL = join(WURZEL, 'vendor', 'three');
 /**
  * Was die Enthuellung braucht. Alles Weitere haengt daran und wird gefunden.
  *
- * Die Bibliothek selbst in der gepressten Fassung, die Beigaben nicht.
- * `three.module.js` und `three.core.js` sind zusammen zwei Megabyte und
- * vierhunderteinundzwanzig Kilobyte ueber die Leitung; gepresst ist es weniger
- * als die Haelfte. Die Beigaben sind zusammen fuenfzehn Kilobyte, da lohnt das
- * Pressen nicht, und unkomprimiert bleiben sie lesbar.
+ * Nur die Bibliothek, und die in der gepressten Fassung. `three.module.js` und
+ * `three.core.js` sind zusammen zwei Megabyte und vierhunderteinundzwanzig
+ * Kilobyte ueber die Leitung; gepresst ist es weniger als die Haelfte.
  *
  * Gepresst wird von jsDelivr, nicht von uns, damit hier keine zweite
  * Werkzeug-Abhaengigkeit einzieht. Die Ausgabe haengt an der festen Version und
  * liegt danach als Datei bei uns, also aendert sie sich nur, wenn dieses Skript
  * noch einmal laeuft.
+ *
+ * Die Beigaben aus `examples/jsm` holt hier niemand mehr: der Staub fliegt ohne
+ * Ueberstrahlung, seit die Leinwand durchsichtig ist. Kaeme wieder eine dazu,
+ * gehoert sie in diese Liste, und dann greift auch die Umschreibung unten
+ * wieder, die den nackten Namen `three` ersetzt.
  */
-const ANFANG = [
-  'build/three.module.min.js',
-  'examples/jsm/postprocessing/EffectComposer.js',
-  'examples/jsm/postprocessing/RenderPass.js',
-  'examples/jsm/postprocessing/UnrealBloomPass.js',
-  'examples/jsm/postprocessing/OutputPass.js',
-];
+const ANFANG = ['build/three.module.min.js'];
 
 /** Innerhalb von `build/` wird durchweg die gepresste Fassung genommen. */
 const gepresst = (pfad) =>

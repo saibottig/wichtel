@@ -1,11 +1,22 @@
 /**
  * Die Enthuellung: Staub.
  *
- * Sechsunddreissigtausend Staubkoerner tragen den ganzen Farbtopf. Sie kreisen
- * auseinander, werden nach innen gezogen und setzen sich zum gezogenen
+ * Sechsunddreissigtausend Staubkoerner tragen den ganzen Farbtopf. Sie fahren
+ * aus einem Knoten in der Mitte auseinander, stehen einen Atemzug lang als
+ * Sturm, werden wieder nach innen gezogen und setzen sich zum gezogenen
  * Buchstaben zusammen. Waehrend sie einlaufen, wechseln alle Koerner nach und
  * nach in die gezogene Farbe: aus achtundzwanzig Moeglichkeiten wird eine,
  * sichtbar und nicht behauptet.
+ *
+ * Der Hinweg gehoert dazu. Ohne ihn steht der Sturm im ersten Bild schon
+ * vollstaendig da, und das liest sich als Bildfehler und nicht als Anfang.
+ *
+ * Die Leinwand bringt keinen eigenen Grund mit, sie ist durchsichtig. Darunter
+ * liegt der Grund der Seite, also alle Farben des Topfes, bis die gezogene beim
+ * Landen hereinbricht. Ein eigener dunkler Grund waere ein Schnitt mitten im
+ * Moment, und der Staub muss deshalb auf hellem Grund tragen: keine additive
+ * Mischung, keine Ueberstrahlung, und helle Farben werden gedaempft statt
+ * dunkler angehoben.
  *
  * Zum Schluss schrumpft der Buchstabe genau auf die Stelle, an der die Seite
  * ihn hinsetzt, und blendet dort aus. Die Uebergabe ist damit eine
@@ -21,10 +32,6 @@
  */
 
 import * as THREE from '../vendor/three/three.module.min.js';
-import { EffectComposer } from '../vendor/three/addons/postprocessing/EffectComposer.js';
-import { RenderPass } from '../vendor/three/addons/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from '../vendor/three/addons/postprocessing/UnrealBloomPass.js';
-import { OutputPass } from '../vendor/three/addons/postprocessing/OutputPass.js';
 
 import { tuscheKasten, inWelt } from './landeplatz.js';
 import { koernerVon, ganzerTopf, leitfarbe } from './farbkoerner.js';
@@ -34,9 +41,12 @@ const HOEHE_WELT = 4.3;
 const ABSTAND = 5;
 const SPREIZUNG = 1.32;
 
+/** Wie gross der Knoten ist, aus dem alles herausfaehrt. Ein Fleck, kein Buchstabe. */
+const KNOTEN = 0.14;
+
 /** Wie lange die Enthuellung dauert, und wann die Seite uebernimmt. */
-export const DAUER = 3200;
-const LANDUNG = 0.87;
+export const DAUER = 4800;
+const LANDUNG = 0.9;
 
 const SCHRIFT = 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
 
@@ -218,7 +228,8 @@ float snoise(vec3 v) {
 `;
 
 const VERTEX = /* glsl */ `
-  uniform float uT;
+  uniform float uAuf;
+  uniform float uEin;
   uniform float uZeit;
   uniform float uSkala;
   uniform float uFarbwechsel;
@@ -226,6 +237,7 @@ const VERTEX = /* glsl */ `
   uniform vec3 uVersatz;
   uniform float uAbgang;
   uniform vec3 uZielfarbe;
+  uniform float uKnoten;
 
   attribute vec3 aZiel;
   attribute float aRadius;
@@ -237,17 +249,36 @@ const VERTEX = /* glsl */ `
   varying vec3 vFarbe;
   varying float vStaerke;
 
+  // Sanft an beiden Enden. Mit einem auslaufenden Bogen waere jede Haelfte nach
+  // einem Drittel vorbei und der Rest der Zeit ein Standbild.
+  float weich(float t) { return t * t * t * (t * (t * 6.0 - 15.0) + 10.0); }
+
+  // Jedes Korn laeuft etwas spaeter los als das vorige, hin wie zurueck.
+  float anteil(float u, float verzug) {
+    return clamp((u - verzug) / max(1.0 - verzug, 0.001), 0.0, 1.0);
+  }
+
   void main() {
-    float t = clamp((uT - aVerzug) / max(1.0 - aVerzug, 0.001), 0.0, 1.0);
-    // Sanft an beiden Enden. Mit einem auslaufenden Bogen waere der Sturm nach
-    // einem Drittel vorbei und der Rest der Zeit ein Standbild.
-    float e = t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
-    float offen = 1.0 - e;
+    float auf = weich(anteil(uAuf, aVerzug));
+    float ein = weich(anteil(uEin, aVerzug));
+    // Erst auf, dann zu: der Sturm wird aufgebaut und wieder eingesammelt.
+    float offen = auf * (1.0 - ein);
 
     float winkel = aDreh + uZeit * (0.6 + aRadius * 0.3) + offen * 4.5;
     float r = aRadius * offen;
 
-    vec3 p = aZiel;
+    // Der Knoten ist ein Ball, keine geschrumpfte Schrift: eine kleine Fassung
+    // des Buchstabens waere am Anfang lesbar und verriete das Ergebnis, bevor
+    // die Enthuellung ueberhaupt angefangen hat.
+    vec3 knoten = normalize(vec3(
+      cos(aDreh * 7.1),
+      sin(aDreh * 3.3 + 1.7),
+      cos(aDreh * 11.7 + 4.2)
+    )) * uKnoten * (0.35 + aRadius * 0.22);
+
+    // Auf dem Hinweg wandern die Koerner aus dem Knoten auf ihren Platz im
+    // Buchstaben. Solange der Sturm steht, ist davon nichts zu sehen.
+    vec3 p = mix(knoten, aZiel, auf);
     p.x += cos(winkel) * r;
     p.y += sin(winkel * 0.83 + aDreh) * r * 0.72;
     p.z += sin(winkel) * r;
@@ -264,19 +295,25 @@ const VERTEX = /* glsl */ `
     p = p * uMasse + uVersatz;
 
     vFarbe = mix(aFarbe, uZielfarbe, uFarbwechsel);
-    vStaerke = mix(0.34, 0.22, e) * (1.0 - uAbgang);
+    // Ein einzelnes Korn muss auf hellem Grund fuer sich stehen, und der fertige
+    // Buchstabe muss decken. Ohne additive Mischung deckt er nicht von selbst:
+    // was sich auf dunklem Grund zur Flaeche addiert hat, bleibt hier ein Sieb.
+    vStaerke = mix(0.62, 0.92, ein) * (1.0 - uAbgang);
 
     vec4 sicht = modelViewMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * sicht;
     // Nie unter einen Bildpunkt: am Ende ist der Buchstabe klein, und Koerner
     // unterhalb eines Bildpunktes flimmern, statt eine Flaeche zu ergeben.
     gl_PointSize = max(
-      aKorn * (1.0 + offen * 0.8) * uMasse * uSkala / max(-sicht.z, 0.1),
+      aKorn * (1.0 + offen * 0.8 + ein * 0.9) * uMasse * uSkala / max(-sicht.z, 0.1),
       1.0
     );
   }
 `;
 
+// Vormultipliziert: die Leinwand ist durchsichtig, und der Browser setzt sie
+// vormultipliziert auf die Seite. Ohne das saehe jedes weiche Kornende zu hell
+// aus, weil der Rand mit nichts gemischt wuerde.
 const FRAGMENT = /* glsl */ `
   varying vec3 vFarbe;
   varying float vStaerke;
@@ -286,7 +323,8 @@ const FRAGMENT = /* glsl */ `
     float r2 = dot(d, d);
     if (r2 > 0.25) discard;
     float weich = smoothstep(0.25, 0.015, r2);
-    gl_FragColor = vec4(vFarbe * weich, weich * vStaerke);
+    float deckung = weich * vStaerke;
+    gl_FragColor = vec4(vFarbe * deckung, deckung);
   }
 `;
 
@@ -297,12 +335,17 @@ const FRAGMENT = /* glsl */ `
 const spanne = (t, von, bis) => Math.min(Math.max((t - von) / (bis - von), 0), 1);
 const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
-/** Zieht eine Farbe so weit ins Helle, dass sie auf dunklem Grund noch traegt. */
-const sichtbar = (farbe, mindest) => {
+/**
+ * Daempft eine Farbe so weit, dass sie auf hellem Grund noch traegt.
+ *
+ * Der Grund der Seite ist hell, also verschwindet nicht Schwarz, sondern Weiss.
+ * Der Farbton bleibt, nur die Helligkeit gibt nach: aus Weiss wird ein Grau,
+ * das man sieht, und Pastell bleibt Pastell.
+ */
+const sichtbar = (farbe, hoechstens) => {
   const hell = Math.max(farbe.r, farbe.g, farbe.b);
-  if (hell >= mindest) return farbe;
-  if (hell < 0.001) return farbe.setRGB(mindest, mindest, mindest);
-  return farbe.multiplyScalar(mindest / hell);
+  if (hell <= hoechstens) return farbe;
+  return farbe.multiplyScalar(hoechstens / hell);
 };
 
 const alsFarbe = (css) => new THREE.Color().setStyle(css, THREE.SRGBColorSpace);
@@ -331,15 +374,16 @@ export const enthuellen = async ({ buchstabe, farbe: farbname }, ziel, beiLandun
 
   const renderer = new THREE.WebGLRenderer({
     canvas: leinwand,
-    alpha: false,
+    alpha: true,
     antialias: true,
     powerPreference: 'high-performance',
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.toneMapping = THREE.NoToneMapping;
+  renderer.setClearColor(0x000000, 0);
 
   const szene = new THREE.Scene();
-  szene.background = new THREE.Color(0x0b0d10);
+  // Kein eigener Grund: was durchscheint, ist der Grund der Seite.
   const kamera = new THREE.PerspectiveCamera(45, 1, 0.1, 60);
 
   const geometrie = new THREE.BufferGeometry();
@@ -351,8 +395,8 @@ export const enthuellen = async ({ buchstabe, farbe: farbname }, ziel, beiLandun
   const korn = new Float32Array(KOERNER);
 
   const wolke = glyphWolke(buchstabe, KOERNER);
-  const topf = ganzerTopf().map((css) => sichtbar(alsFarbe(css), 0.34));
-  const eigene = koernerVon(farbname).map((css) => sichtbar(alsFarbe(css), 0.42));
+  const topf = ganzerTopf().map((css) => sichtbar(alsFarbe(css), 0.86));
+  const eigene = koernerVon(farbname).map((css) => sichtbar(alsFarbe(css), 0.72));
 
   for (let i = 0; i < KOERNER; i += 1) {
     radius[i] = 0.5 + Math.random() ** 1.6 * 2.6;
@@ -385,27 +429,24 @@ export const enthuellen = async ({ buchstabe, farbe: farbname }, ziel, beiLandun
     vertexShader: RAUSCHEN + VERTEX,
     fragmentShader: FRAGMENT,
     uniforms: {
-      uT: { value: 0 },
+      uAuf: { value: 0 },
+      uEin: { value: 0 },
       uZeit: { value: 0 },
       uSkala: { value: 600 },
       uFarbwechsel: { value: 0 },
       uMasse: { value: 1 },
       uVersatz: { value: new THREE.Vector3() },
       uAbgang: { value: 0 },
-      uZielfarbe: { value: sichtbar(alsFarbe(leitfarbe(farbname)), 0.42) },
+      uZielfarbe: { value: sichtbar(alsFarbe(leitfarbe(farbname)), 0.72) },
+      uKnoten: { value: KNOTEN },
     },
     transparent: true,
     depthWrite: false,
-    blending: THREE.AdditiveBlending,
+    premultipliedAlpha: true,
   });
 
   const punkte = new THREE.Points(geometrie, material);
   szene.add(punkte);
-
-  const komponist = new EffectComposer(renderer);
-  komponist.addPass(new RenderPass(szene, kamera));
-  komponist.addPass(new UnrealBloomPass(new THREE.Vector2(256, 512), 0.34, 0.7, 0.62));
-  komponist.addPass(new OutputPass());
 
   let platz = { x: 0, y: 0, hoehe: 1 };
   let zielMasse = 1;
@@ -414,7 +455,6 @@ export const enthuellen = async ({ buchstabe, farbe: farbname }, ziel, beiLandun
     const breite = window.innerWidth;
     const hoehe = window.innerHeight;
     renderer.setSize(breite, hoehe, false);
-    komponist.setSize(breite, hoehe);
     kamera.aspect = breite / hoehe;
     kamera.fov = 2 * THREE.MathUtils.radToDeg(Math.atan(HOEHE_WELT / 2 / ABSTAND));
     kamera.position.z = ABSTAND;
@@ -436,7 +476,6 @@ export const enthuellen = async ({ buchstabe, farbe: farbname }, ziel, beiLandun
     window.removeEventListener('resize', einpassen);
     geometrie.dispose();
     material.dispose();
-    komponist.dispose();
     renderer.dispose();
     leinwand.remove();
   };
@@ -453,17 +492,20 @@ export const enthuellen = async ({ buchstabe, farbe: farbname }, ziel, beiLandun
         }
         const vergangen = jetzt - start;
         const t = Math.min(vergangen / DAUER, 1);
-        const schrumpf = easeInOut(spanne(t, 0.74, 0.93));
+        const schrumpf = easeInOut(spanne(t, 0.82, 0.95));
 
-        material.uniforms.uT.value = spanne(t, 0.03, 0.7);
+        // Hin und zurueck. Zwischen den beiden Spannen liegt der Atemzug, in dem
+        // der Sturm einfach steht.
+        material.uniforms.uAuf.value = spanne(t, 0.02, 0.4);
+        material.uniforms.uEin.value = spanne(t, 0.46, 0.82);
         material.uniforms.uZeit.value = vergangen / 1000;
-        material.uniforms.uFarbwechsel.value = easeInOut(spanne(t, 0.32, 0.72));
+        material.uniforms.uFarbwechsel.value = easeInOut(spanne(t, 0.5, 0.84));
         material.uniforms.uMasse.value = 1 + (zielMasse - 1) * schrumpf;
         material.uniforms.uVersatz.value.set(platz.x * schrumpf, platz.y * schrumpf, 0);
-        material.uniforms.uAbgang.value = spanne(t, 0.85, 1);
-        punkte.rotation.y = Math.sin(vergangen / 2000) * 0.16 * (1 - spanne(t, 0.55, 0.78));
+        material.uniforms.uAbgang.value = spanne(t, 0.88, 1);
+        punkte.rotation.y = Math.sin(vergangen / 2000) * 0.16 * (1 - spanne(t, 0.7, 0.86));
 
-        komponist.render();
+        renderer.render(szene, kamera);
 
         if (!gelandet && t >= LANDUNG) {
           gelandet = true;
