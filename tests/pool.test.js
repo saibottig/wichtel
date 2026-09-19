@@ -1,7 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { BUCHSTABEN, FARBEN, tupferFuer, darstellungFuer, TUPFER_UNBEKANNT } from '../src/pool.js';
+import {
+  BUCHSTABEN,
+  FARBEN,
+  FARBTOENE,
+  tupferFuer,
+  darstellungFuer,
+  TUPFER_UNBEKANNT,
+} from '../src/pool.js';
 
 test('jeder Buchstabe bleibt im Topf, auch die unbequemen', () => {
   for (const buchstabe of ['Q', 'X', 'Y', 'Ä', 'Ö', 'Ü']) {
@@ -82,4 +89,18 @@ test('ein erfundener Farbname liefert eine vollständige, neutrale Darstellung',
   assert.equal(d.tupfer, TUPFER_UNBEKANNT);
   assert.ok(['hell', 'dunkel'].includes(d.ton));
   assert.ok(d.flut.length > 0);
+});
+
+test('die einfarbigen Töne des Topfes lassen sich für den Grund herausziehen', () => {
+  assert.ok(FARBTOENE.length >= 12, `nur ${FARBTOENE.length} einfarbige Töne`);
+  for (const ton of FARBTOENE) {
+    assert.match(ton, /^#[0-9a-f]{6}$/i);
+  }
+});
+
+test('jeder Farbton gehört zu einer Farbe aus dem Topf', () => {
+  const alleTupfer = FARBEN.map(tupferFuer);
+  for (const ton of FARBTOENE) {
+    assert.ok(alleTupfer.includes(ton), `${ton} stammt aus keiner Farbe`);
+  }
 });

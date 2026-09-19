@@ -1,25 +1,24 @@
-/* Wichteln: eine Seite, kein Build-Schritt. */
+/* Wichteln: eine Seite, kein Build-Schritt.
+
+   Ein Aufbau für alle drei Zustände. Was wechselt, ist der Grund: die gezogene
+   Farbe, wenn eine gezogen ist, und sonst alle Farben des Topfes auf einmal,
+   weil vor der Auslosung noch jede möglich ist. */
 
 :root {
-  --tanne: #0d1b17;
-  --tanne-hell: #14261f;
-  --linie: rgba(255, 255, 255, 0.09);
-  --schrift: #eef3ef;
-  --schrift-leise: #93a89d;
-  --gold: #e8b84b;
-  --gold-tief: #c2932f;
-  --rot: #d8564f;
-  --radius: 18px;
-  --schatten: 0 18px 50px rgba(0, 0, 0, 0.45);
+  --schrift: #16181a;
+  --schrift-leise: rgba(22, 24, 26, 0.68);
+  --pille: rgba(255, 255, 255, 0.55);
+  --linie: rgba(0, 0, 0, 0.12);
+  --rot: #a8322b;
 }
 
 * {
   box-sizing: border-box;
 }
 
-/* `hidden` muss jede Anzeigeart schlagen. Ohne das blieb der Ergebnis-Bereich
-   sichtbar, weil `.ergebnis { display: flex }` spezifischer ist als die
-   Regel des Browsers für [hidden]. */
+/* `hidden` muss jede Anzeigeart schlagen. Ohne das bliebe ein Bereich
+   sichtbar, weil `.zustand { display: flex }` spezifischer ist als die Regel
+   des Browsers für [hidden]. */
 [hidden] {
   display: none !important;
 }
@@ -34,9 +33,7 @@ body {
   min-height: 100dvh;
   display: flex;
   justify-content: center;
-  background:
-    radial-gradient(1100px 620px at 50% -12%, #1d3a2e 0%, transparent 62%),
-    var(--tanne);
+  background: #f1f0ed;
   color: var(--schrift);
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
     sans-serif;
@@ -45,125 +42,95 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.buehne {
-  width: 100%;
-  max-width: 660px;
-  padding: clamp(28px, 7vw, 72px) 20px 80px;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
+/* Der Grund */
 
-/* Kopf */
-
-.kopf {
-  text-align: center;
-}
-
-.titel {
-  margin: 0;
-  font-size: clamp(2.3rem, 9vw, 3.4rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  background: linear-gradient(180deg, var(--schrift) 20%, var(--gold) 190%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.unterzeile {
-  margin: 10px 0 0;
-  color: var(--schrift-leise);
-  font-size: 1rem;
-}
-
-/* Karten */
-
-.karte {
-  background: linear-gradient(180deg, var(--tanne-hell), #101f1a);
-  border: 1px solid var(--linie);
-  border-radius: var(--radius);
-  box-shadow: var(--schatten);
-  padding: clamp(24px, 5vw, 38px);
-  text-align: center;
-}
-
-.karte-fehler {
-  border-color: rgba(216, 86, 79, 0.42);
-}
-
-.jahr {
-  margin: 0 0 22px;
-  color: var(--gold);
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.17em;
-  text-transform: uppercase;
-}
-
-/* Die Farbflut
-
-   Die gezogene Farbe ist die Seite, nicht ein Feld darauf. Gemusterte Farben
-   liegen schwach über einer ruhigen Grundfarbe, sonst stünde der Text auf
-   gestreiftem Grund. Welcher Ton die Schrift trägt, sagt der Farbtopf. */
-
-.flut {
+.grund-schichten {
   position: fixed;
   inset: 0;
   z-index: 0;
-  opacity: 0;
-  transition: opacity 620ms ease;
   pointer-events: none;
+  overflow: hidden;
 }
 
-.flutet .flut { opacity: 1; }
-
-.flut-grund,
-.flut-muster,
-.flut-schleier {
+.grund-farbe,
+.grund-muster,
+.grund-schleier {
   position: absolute;
   inset: 0;
 }
 
-.flutet.ton-hell .flut-schleier {
+/* Noch nichts gezogen: alle Farben auf einmal, weich und langsam kreisend.
+   Der Kreis ist größer als das Fenster, damit die Unschärfe keine Kanten
+   zeigt. */
+.moeglich .grund-farbe {
+  filter: saturate(0.62) blur(34px);
+  transform: scale(1.5);
+  transform-origin: center;
+  animation: farbkreisen 44s linear infinite;
+  will-change: transform;
+}
+
+@keyframes farbkreisen {
+  to {
+    transform: scale(1.5) rotate(360deg);
+  }
+}
+
+.moeglich .grund-schleier {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.46), rgba(255, 255, 255, 0.72));
+}
+
+/* Gezogen: die Farbe ist die Seite. Gemusterte Farben liegen schwach über
+   einer ruhigen Grundfarbe, sonst stünde der Text auf gestreiftem Grund.
+   Welchen Ton die Schrift trägt, sagt der Farbtopf. */
+.geflutet.ton-hell .grund-schleier {
   background: linear-gradient(180deg, rgba(10, 10, 14, 0.04), rgba(10, 10, 14, 0.44));
 }
 
-.flutet.ton-dunkel .flut-schleier {
+.geflutet.ton-dunkel .grund-schleier {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.36));
 }
 
-/* Auf der Flut trägt die Schrift den Ton, den die Farbe vorgibt. */
-.flutet.ton-hell {
+.ton-hell {
   --schrift: #ffffff;
   --schrift-leise: rgba(255, 255, 255, 0.82);
   --pille: rgba(0, 0, 0, 0.26);
   --linie: rgba(255, 255, 255, 0.24);
+  --rot: #ffb4ad;
 }
 
-.flutet.ton-dunkel {
+.ton-dunkel {
   --schrift: #16181a;
-  --schrift-leise: rgba(22, 24, 26, 0.72);
-  --pille: rgba(255, 255, 255, 0.42);
-  --linie: rgba(0, 0, 0, 0.14);
+  --schrift-leise: rgba(22, 24, 26, 0.68);
+  --pille: rgba(255, 255, 255, 0.5);
+  --linie: rgba(0, 0, 0, 0.13);
+  --rot: #a8322b;
 }
 
-.flutet .kopf { display: none; }
+/* Die Bühne */
 
-.buehne { position: relative; z-index: 1; }
-
-/* Das Ergebnis */
-
-.ergebnis {
+.buehne {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 660px;
+  padding: clamp(28px, 7vw, 56px) 22px 72px;
   display: flex;
   flex-direction: column;
-  min-height: 74vh;
+}
+
+.zustand {
+  display: flex;
+  flex-direction: column;
+  min-height: 72vh;
   color: var(--schrift);
 }
 
-.jahr-pille { margin: 0; }
+.pille {
+  margin: 0;
+}
 
-.jahr-pille span {
+.pille span {
   display: inline-block;
   padding: 6px 13px;
   border-radius: 999px;
@@ -174,84 +141,61 @@ body {
   text-transform: uppercase;
 }
 
-.grossbuchstabe {
+.riese {
   margin: auto 0 0;
-  font-size: clamp(9rem, 46vw, 15rem);
-  /* Über eins, damit die Unterlänge von J und Q im Kasten bleibt und nicht
-     ins Farbwort darunter läuft. */
+  font-size: clamp(9rem, 44vw, 14rem);
+  /* Über eins, damit die Unterlänge von J und Q im Kasten bleibt und nicht ins
+     Wort darunter läuft. */
   line-height: 1.1;
   font-weight: 800;
   letter-spacing: -0.06em;
 }
 
-.farbwort {
+/* Das Fragezeichen steht, wo der Buchstabe stehen wird, und tritt zurück. */
+.riese-leer {
+  color: color-mix(in srgb, var(--schrift) 26%, transparent);
+}
+
+.wort {
   margin: 0;
-  font-size: clamp(2rem, 11vw, 3.4rem);
+  font-size: clamp(2rem, 10vw, 3.2rem);
   font-weight: 800;
   letter-spacing: -0.035em;
-  line-height: 1.05;
+  line-height: 1.06;
   /* Durchsichtig und Regenbogen sind die längsten Namen im Topf. */
   overflow-wrap: anywhere;
 }
 
-.ergebnis .regel {
+.wort-fehler {
+  color: var(--rot);
+}
+
+.satz {
   margin: 12px 0 0;
   color: var(--schrift-leise);
   font-size: 1rem;
 }
 
-.ergebnis .knopfreihe { margin-top: 24px; justify-content: flex-start; }
-
-.flutet.ton-hell .knopf-haupt { background: #ffffff; color: #1a1a1a; }
-.flutet.ton-hell .knopf-still { background: rgba(255, 255, 255, 0.22); color: #ffffff; }
-.flutet.ton-dunkel .knopf-haupt { background: #16181a; color: #ffffff; }
-.flutet.ton-dunkel .knopf-still { background: rgba(0, 0, 0, 0.12); color: #16181a; }
-
-.flutet .jahreszeile { background: var(--pille); border-color: var(--linie); }
-.flutet .jahreszeile .jahreszahl,
-.flutet .vergangenes-titel { color: var(--schrift-leise); }
-.flutet .jahreszeile .jahres-buchstabe { color: var(--schrift); }
-.flutet .jahreszeile .jahres-farbe { color: var(--schrift); }
-
-/* Ein Tupfer in der Nähe der gefluteten Farbe verschwindet sonst darin. */
-.flutet .jahreszeile .tupfer {
-  border-color: transparent;
-  box-shadow: 0 0 0 1.5px var(--schrift-leise);
-}
-
-.einladung {
-  margin: 0 0 26px;
-  color: var(--schrift-leise);
-}
-
-.fehler-titel {
-  margin: 0 0 10px;
-  font-size: 1.15rem;
-  color: var(--rot);
-}
-
 /* Knöpfe */
 
 .knopfreihe {
-  margin-top: 26px;
+  margin-top: 24px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  justify-content: center;
 }
 
 .knopf {
   appearance: none;
-  border: 1px solid transparent;
+  border: 0;
   border-radius: 999px;
-  padding: 12px 24px;
+  padding: 13px 26px;
   font: inherit;
-  font-weight: 600;
+  font-weight: 650;
   cursor: pointer;
   transition:
     transform 120ms ease,
-    background-color 160ms ease,
-    border-color 160ms ease;
+    background-color 160ms ease;
 }
 
 .knopf:hover {
@@ -263,7 +207,7 @@ body {
 }
 
 .knopf:focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--schrift);
   outline-offset: 3px;
 }
 
@@ -273,24 +217,29 @@ body {
   transform: none;
 }
 
-.knopf-haupt {
-  background: linear-gradient(180deg, var(--gold), var(--gold-tief));
-  color: #22190a;
-}
-
-.knopf-still {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: var(--linie);
-  color: var(--schrift);
-}
-
-.knopf-still:hover {
-  background: rgba(255, 255, 255, 0.09);
-}
-
 .knopf-gross {
-  padding: 15px 44px;
+  padding: 16px 44px;
   font-size: 1.06rem;
+}
+
+.ton-hell .knopf-haupt {
+  background: #ffffff;
+  color: #1a1a1a;
+}
+
+.ton-hell .knopf-still {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.ton-dunkel .knopf-haupt {
+  background: #16181a;
+  color: #ffffff;
+}
+
+.ton-dunkel .knopf-still {
+  background: rgba(0, 0, 0, 0.12);
+  color: #16181a;
 }
 
 .hinweis {
@@ -302,14 +251,17 @@ body {
 
 /* Vergangene Jahre */
 
+.vergangenes {
+  margin-top: 40px;
+}
+
 .vergangenes-titel {
-  margin: 0 0 14px;
+  margin: 0 0 12px;
   color: var(--schrift-leise);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  text-align: center;
 }
 
 .jahresliste {
@@ -326,9 +278,10 @@ body {
   align-items: center;
   gap: 13px;
   padding: 13px 18px;
-  background: rgba(255, 255, 255, 0.028);
+  background: var(--pille);
   border: 1px solid var(--linie);
   border-radius: 12px;
+  color: var(--schrift);
 }
 
 .jahreszeile .jahreszahl {
@@ -339,7 +292,6 @@ body {
 }
 
 .jahreszeile .jahres-buchstabe {
-  color: var(--gold);
   font-weight: 700;
   font-size: 1.28rem;
   min-width: 1.4em;
@@ -352,9 +304,13 @@ body {
   margin-left: auto;
 }
 
-.jahreszeile .tupfer {
+.tupfer {
+  flex: none;
   width: 17px;
   height: 17px;
+  border-radius: 50%;
+  /* Ein Tupfer nahe der gefluteten Farbe verschwände sonst darin. */
+  box-shadow: 0 0 0 1.5px var(--schrift-leise);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -364,5 +320,9 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .moeglich .grund-farbe {
+    animation: none;
   }
 }

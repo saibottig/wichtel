@@ -137,6 +137,20 @@ const FARBTOPF = Object.freeze([
 /** Der Farbtopf, aus dem gezogen wird. */
 export const FARBEN = Object.freeze(FARBTOPF.map(({ name }) => name));
 
+/**
+ * Die einfarbigen Töne des Topfes.
+ *
+ * Sie tragen den Grund der Seite, solange noch nichts gezogen ist: vor der
+ * Auslosung ist jede Farbe möglich, also sind alle da. Verläufe und Muster
+ * bleiben draußen, weil sie selbst schon aus mehreren Farben bestehen und im
+ * Kreis nur matschen würden.
+ *
+ * Kommt eine einfarbige Farbe in den Topf, steht sie hier von selbst mit drin.
+ */
+export const FARBTOENE = Object.freeze(
+  FARBTOPF.map(({ tupfer }) => tupfer).filter((tupfer) => tupfer.startsWith('#')),
+);
+
 /** Ein neutraler Tupfer für einen Namen, den es im Topf nicht gibt. */
 export const TUPFER_UNBEKANNT = 'rgba(255, 255, 255, 0.14)';
 

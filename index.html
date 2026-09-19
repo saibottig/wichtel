@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Wichteln</title>
     <meta name="description" content="Ein Buchstabe und eine Farbe pro Jahr, ausgelost für die ganze Gruppe." />
-    <meta name="color-scheme" content="dark light" />
+    <meta name="color-scheme" content="light dark" />
     <link rel="stylesheet" href="styles.css" />
     <link
       rel="icon"
@@ -13,23 +13,18 @@
     />
   </head>
   <body>
-    <div class="flut" aria-hidden="true">
-      <div class="flut-grund" id="flut-grund"></div>
-      <div class="flut-muster" id="flut-muster"></div>
-      <div class="flut-schleier"></div>
+    <div class="grund-schichten" aria-hidden="true">
+      <div class="grund-farbe" id="grund-farbe"></div>
+      <div class="grund-muster" id="grund-muster"></div>
+      <div class="grund-schleier"></div>
     </div>
 
     <main class="buehne">
-      <header class="kopf">
-        <h1 class="titel">Wichteln</h1>
-        <p class="unterzeile">Ein Buchstabe. Eine Farbe. Für alle gleich.</p>
-      </header>
-
-      <section id="bereich-ergebnis" class="ergebnis" hidden>
-        <p class="jahr-pille"><span id="ergebnis-jahr"></span></p>
-        <p class="grossbuchstabe" id="ergebnis-buchstabe">?</p>
-        <p class="farbwort" id="ergebnis-farbname">?</p>
-        <p class="regel" id="ergebnis-regel" role="status"></p>
+      <section id="bereich-ergebnis" class="zustand" hidden>
+        <p class="pille"><span id="ergebnis-jahr"></span></p>
+        <p class="riese" id="ergebnis-buchstabe">?</p>
+        <p class="wort" id="ergebnis-farbname"></p>
+        <p class="satz" id="ergebnis-regel" role="status"></p>
         <div class="knopfreihe">
           <button type="button" class="knopf knopf-haupt" id="knopf-kopieren">Link kopieren</button>
           <button type="button" class="knopf knopf-still" id="knopf-neu">Neu auslosen</button>
@@ -37,9 +32,11 @@
         <p class="hinweis" id="kopier-rueckmeldung" role="status"></p>
       </section>
 
-      <section id="bereich-auslosung" class="karte" hidden>
-        <p class="jahr" id="auslosung-jahr"></p>
-        <p class="einladung">Noch nichts gezogen. Los geht es mit einem Klick.</p>
+      <section id="bereich-auslosung" class="zustand" hidden>
+        <p class="pille"><span id="auslosung-jahr"></span></p>
+        <p class="riese riese-leer">?</p>
+        <p class="wort">Noch nichts gezogen</p>
+        <p class="satz">Ein Buchstabe und eine Farbe, für die ganze Gruppe.</p>
         <div class="knopfreihe">
           <button type="button" class="knopf knopf-haupt knopf-gross" id="knopf-auslosen">
             Auslosen
@@ -47,9 +44,13 @@
         </div>
       </section>
 
-      <section id="bereich-fehler" class="karte karte-fehler" hidden>
-        <h2 class="fehler-titel">Der Link lässt sich nicht lesen</h2>
-        <p class="hinweis" id="fehler-grund"></p>
+      <section id="bereich-fehler" class="zustand" hidden>
+        <p class="pille"><span id="fehler-jahr"></span></p>
+        <p class="riese riese-leer">?</p>
+        <p class="wort wort-fehler">Der Link lässt sich nicht lesen</p>
+        <p class="satz">
+          Wahrscheinlich ist er beim Weiterleiten abgeschnitten worden. Lost einfach neu aus.
+        </p>
         <div class="knopfreihe">
           <button type="button" class="knopf knopf-haupt" id="knopf-fehler-auslosen">
             Neu auslosen

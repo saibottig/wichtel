@@ -10,7 +10,7 @@ import { draw, waehleAus } from './draw.js';
 import { encodeToken } from './token.js';
 import { chooseView } from './view.js';
 import { pastYears } from './archive.js';
-import { BUCHSTABEN, FARBEN, darstellungFuer, tupferFuer } from './pool.js';
+import { BUCHSTABEN, FARBEN, FARBTOENE, darstellungFuer, tupferFuer } from './pool.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -37,6 +37,9 @@ const knoepfeSperren = (gesperrt) => {
   }
 };
 
+/** Alle Farben des Topfes im Kreis, einmal gebaut und dann wiederverwendet. */
+const ALLE_MOEGLICH = `conic-gradient(from 0deg, ${[...FARBTOENE, FARBTOENE[0]].join(', ')})`;
+
 /**
  * Lässt die gezogene Farbe die ganze Seite einnehmen.
  *
@@ -44,25 +47,37 @@ const knoepfeSperren = (gesperrt) => {
  * gestreiftem Grund. Ungemusterte Farben laufen in voller Stärke durch, denn
  * an einer einzelnen Farbe gäbe es nichts zu dämpfen.
  */
-const flutSetzen = (farbe) => {
+const grundFluten = (farbe) => {
   const { flut, ton, daempfung } = darstellungFuer(farbe);
 
-  $('flut-grund').style.background = daempfung ? daempfung.basis : flut;
-  $('flut-muster').style.background = daempfung ? flut : 'none';
-  $('flut-muster').style.opacity = daempfung ? String(daempfung.staerke) : '0';
+  $('grund-farbe').style.background = daempfung ? daempfung.basis : flut;
+  $('grund-muster').style.background = daempfung ? flut : 'none';
+  $('grund-muster').style.opacity = daempfung ? String(daempfung.staerke) : '0';
 
-  // Die Flut liegt fest am Fenster. Der Körper bekommt denselben Grund, damit
-  // beim Überscrollen nichts vom alten Grün auftaucht. Kurzschreibweise, weil
-  // die Hälfte der Farben Verläufe sind und backgroundColor die nicht nimmt.
+  // Die Schichten liegen fest am Fenster. Der Körper bekommt denselben Grund,
+  // damit beim Überscrollen nichts vom alten durchblitzt. Kurzschreibweise,
+  // weil die Hälfte der Farben Verläufe sind und backgroundColor die nicht nimmt.
   document.body.style.background = daempfung ? daempfung.basis : flut;
-  document.body.classList.add('flutet');
+  document.body.classList.remove('moeglich');
+  document.body.classList.add('geflutet');
   document.body.classList.toggle('ton-hell', ton === 'hell');
   document.body.classList.toggle('ton-dunkel', ton === 'dunkel');
 };
 
-const flutLoeschen = () => {
+/**
+ * Der Grund, solange nichts gezogen ist.
+ *
+ * Vor der Auslosung ist jede Farbe noch möglich, also sind alle da. Das Ziehen
+ * macht daraus eine.
+ */
+const grundMoeglich = () => {
+  $('grund-farbe').style.background = ALLE_MOEGLICH;
+  $('grund-muster').style.background = 'none';
+  $('grund-muster').style.opacity = '0';
+
   document.body.style.background = '';
-  document.body.classList.remove('flutet', 'ton-hell', 'ton-dunkel');
+  document.body.classList.remove('geflutet', 'ton-hell');
+  document.body.classList.add('moeglich', 'ton-dunkel');
 };
 
 const zeigeFarbe = (farbe) => {
@@ -75,7 +90,7 @@ const schreibeErgebnis = ({ jahr, buchstabe, farbe }) => {
   zeigeFarbe(farbe);
   $('ergebnis-regel').textContent =
     `Das Geschenk fängt mit ${buchstabe} an und ist ${farbe.toLowerCase()}.`;
-  flutSetzen(farbe);
+  grundFluten(farbe);
 };
 
 const zeigeVergangeneJahre = (jahre) => {
@@ -154,7 +169,7 @@ const auslosen = async (archiv, jahr) => {
   $('kopier-rueckmeldung').textContent = '';
   $('ergebnis-jahr').textContent = `Wichteln ${jahr}`;
   // Die Farbe bricht erst beim Landen herein, sonst verpufft der Moment.
-  flutLoeschen();
+  grundMoeglich();
   zeigeBereich('ergebnis');
 
   await laufenLassen();
@@ -187,14 +202,14 @@ const zeichnen = (archiv, jahr) => {
     schreibeErgebnis(ansicht.ergebnis);
     zeigeBereich('ergebnis');
   } else if (ansicht.art === 'auslosung') {
-    flutLoeschen();
+    grundMoeglich();
     $('auslosung-jahr').textContent = `Wichteln ${ansicht.jahr}`;
     zeigeBereich('auslosung');
   } else {
-    flutLoeschen();
-    // Der genaue Grund ist für das Archiv-Skript gedacht, nicht für die Gruppe.
-    $('fehler-grund').textContent =
-      'Wahrscheinlich ist er beim Weiterleiten abgeschnitten worden. Lost einfach neu aus.';
+    // Der genaue Grund steht im Token und ist für das Archiv-Skript gedacht,
+    // nicht für die Gruppe. Die Seite nennt den wahrscheinlichen Fall.
+    grundMoeglich();
+    $('fehler-jahr').textContent = `Wichteln ${jahr}`;
     zeigeBereich('fehler');
   }
 
@@ -203,6 +218,10 @@ const zeichnen = (archiv, jahr) => {
 
 const starten = async () => {
   const jahr = new Date().getFullYear();
+
+  // Sofort, damit beim Laden nicht erst der nackte Seitengrund aufblitzt und
+  // dann der Farbkreis nachrückt.
+  grundMoeglich();
 
   let archiv = {};
   try {
