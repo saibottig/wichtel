@@ -54,6 +54,12 @@ The five canonical triage roles are used as-is, with no renaming.
 Because tickets are files rather than tracker objects, a label is a `Status:` line near the top of the file.
 See `docs/agents/triage-labels.md`.
 
+### Animation
+
+The reveal is built with three.js, loaded from a CDN with a pinned version.
+What was learned doing that, and what breaks when it is ignored, is in `docs/agents/animation.md`.
+Read it before touching anything that moves, and before checking such a change by eye.
+
 ### Domain docs
 
 Single-context layout: `CONTEXT.md` and `docs/adr/` at the repo root.

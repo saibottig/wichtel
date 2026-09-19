@@ -56,6 +56,8 @@ They are not up for re-litigation without a new reason.
 
 ## Not yet specified
 
+- [Die Enthüllung in drei Dimensionen](issues/10-enthuellung-in-drei-dimensionen.md): five reveals built with three.js sit playable in `prototypen/enthuellung/`, and the user has not chosen one yet. Riding on that choice is a second question: whether the site may load three.js at all, since it has no build step and carried no dependency until Playwright. Marmor is the only one of the five that could be rebuilt without it.
+
 - [Neu auslosen steht auch dem, der nur schauen kommt](issues/09-neu-auslosen-fuer-gaeste.md): the result page offers the same prominent "Neu auslosen" to a visitor arriving from the group chat as to the person who just drew. Nothing is overwritten, but the shared result is lost from their address bar and a competing link can end up back in the chat.
 
 - What the site should do in the months after Christmas. The page takes the calendar year, so on 1 January it stops showing the result the group is still wichteling under and invites a draw for a Wichteln eleven months away. Nobody will open it then, which is why this was left rather than guessed at.

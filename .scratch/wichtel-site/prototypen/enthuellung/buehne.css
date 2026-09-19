@@ -1,0 +1,341 @@
+/* Die Vergleichsseite. Nicht die Seite selbst, aber nah genug an ihr, dass die
+   Landung beurteilt werden kann: dieselbe Pille, dieselbe Riesenschrift,
+   dieselbe Farbflut aus `src/pool.js`. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 28px 22px 80px;
+  background: #16181b;
+  color: #f2f1ee;
+  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.kopf {
+  max-width: 1620px;
+  margin: 0 auto 26px;
+}
+
+.kopf h1 {
+  margin: 0 0 8px;
+  font-size: 23px;
+  letter-spacing: -0.015em;
+}
+
+.kopf p {
+  margin: 0 0 6px;
+  max-width: 82ch;
+  color: rgba(242, 241, 238, 0.74);
+  font-size: 14px;
+}
+
+.kopf code {
+  font-size: 0.92em;
+  padding: 1px 5px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.warnung {
+  color: #ffbfa8;
+}
+
+.steuerung {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.steuerung label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(242, 241, 238, 0.6);
+}
+
+select {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 9px;
+  background: #24272b;
+  color: #f2f1ee;
+  font: inherit;
+  font-size: 13.5px;
+  text-transform: none;
+  letter-spacing: 0;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+
+.knopf {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 8px 18px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 620;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.07);
+  color: #f2f1ee;
+  transition: background 120ms ease;
+}
+
+.knopf:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.knopf:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+.knopf-haupt {
+  background: #e8b84b;
+  border-color: #e8b84b;
+  color: #221a0a;
+}
+
+.knopf-haupt:hover:not(:disabled) {
+  background: #f2c65d;
+}
+
+.ziehung {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(242, 241, 238, 0.55);
+}
+
+.ziehung b {
+  color: #f2f1ee;
+}
+
+/* Die Karten */
+
+.galerie {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  max-width: 1620px;
+  margin: 0 auto;
+}
+
+.karte {
+  width: 300px;
+}
+
+.karte h2 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+}
+
+.beschreibung {
+  margin: 0 0 12px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: rgba(242, 241, 238, 0.62);
+  min-height: 5.6em;
+}
+
+/* Die Bühne trägt ihre eigenen Maßeinheiten: alles im Inneren steht in `cqh`,
+   also in Prozent der Bühnenhöhe. Damit sieht die Karte genauso aus wie die
+   Lupe, nur kleiner, und `landeplatz()` in `buehne.js` darf mit denselben
+   Anteilen rechnen wie dieses Blatt. */
+.buehne {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 2;
+  container-type: size;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #0b0d10;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.45);
+  isolation: isolate;
+}
+
+.buehne canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  transition: opacity 520ms ease;
+}
+
+/* Die Farbflut der Seite, gebaut aus denselben Werten wie `styles.css`. */
+.grund-farbe,
+.grund-muster,
+.grund-schleier {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 520ms ease;
+  pointer-events: none;
+}
+
+.buehne.geflutet .grund-farbe {
+  opacity: 1;
+}
+
+/* Der Schleier gehört zur Lesbarkeit, nicht zur Farbflut. Auch wer sein Ende
+   selbst malt, bekommt ihn, sonst steht der Text ungeschützt auf der Farbe. */
+.buehne.gelandet .grund-schleier {
+  opacity: 1;
+}
+
+/* Gemusterte Farben liegen schwach über einer ruhigen Grundfarbe, sonst stünde
+   der Text auf gestreiftem Grund. Dieselbe Regel wie in `styles.css`. */
+.buehne.geflutet .grund-muster {
+  opacity: var(--muster-staerke, 0);
+}
+
+.buehne.ton-hell .grund-schleier {
+  background: linear-gradient(180deg, rgba(10, 10, 14, 0.04), rgba(10, 10, 14, 0.44));
+}
+
+.buehne.ton-dunkel .grund-schleier {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.36));
+}
+
+.buehne.abgetreten canvas {
+  opacity: 0;
+}
+
+/* Beim Zurücksetzen darf nichts überblenden. Sonst hängt beim zweiten
+   Abspielen eine halbe Sekunde lang die Farbflut des ersten Durchgangs über der
+   frisch gestarteten Animation, und das sieht nach einem Fehler in der
+   Animation aus, obwohl es einer im Zurücksetzen ist. */
+.buehne.sofort,
+.buehne.sofort * {
+  transition: none !important;
+}
+
+.inhalt {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 3cqh 2.83cqh 3.33cqh;
+  pointer-events: none;
+  color: #ffffff;
+}
+
+.pille {
+  align-self: flex-start;
+  padding: 0.83cqh 1.83cqh;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 1.5cqh;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+.buehne.gelandet .pille {
+  opacity: 1;
+}
+
+.ton-dunkel .pille {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.unten {
+  margin-top: auto;
+}
+
+.riese {
+  font-size: 19.7cqh;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+}
+
+.wort {
+  font-size: 4.33cqh;
+  line-height: 1.55;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  margin-top: 0.67cqh;
+}
+
+/* Der Buchstabe wird nur eingeblendet, nicht verschoben. Die Animation hat ihn
+   vorher schon an genau diese Stelle gebracht, ein Versatz wäre ein Ruck. */
+.riese,
+.wort {
+  opacity: 0;
+  transition: opacity 340ms ease;
+}
+
+.buehne.gelandet .riese,
+.buehne.gelandet .wort {
+  opacity: 1;
+}
+
+.buehne.gelandet .wort {
+  transition-delay: 90ms;
+}
+
+.ton-dunkel .inhalt {
+  color: #16181a;
+}
+
+.reihe {
+  display: flex;
+  gap: 8px;
+  margin-top: 11px;
+}
+
+.reihe .knopf {
+  flex: 1;
+  padding: 9px 10px;
+}
+
+/* Die Lupe: dieselbe Bühne, nur groß. Der Knoten wandert, der WebGL-Kontext
+   bleibt derselbe. */
+
+.lupe {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  gap: 16px;
+  grid-template-rows: 1fr auto;
+  padding: 24px;
+  background: rgba(10, 11, 13, 0.88);
+  backdrop-filter: blur(6px);
+}
+
+.lupe[hidden] {
+  display: none;
+}
+
+.lupe-platz {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+/* Dieselbe Bühne, nur größer. Alles darin rechnet in `cqh` und wächst mit. */
+.lupe-platz .buehne {
+  width: min(46vh, 92vw);
+  height: min(92vh, 184vw);
+  aspect-ratio: auto;
+}

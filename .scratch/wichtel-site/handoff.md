@@ -13,14 +13,22 @@ Lies zuerst `map.md`, dann diesen Text.
 ## Worauf die nächste Sitzung zusteuert
 
 Eine von fünf Enthüllungs-Animationen auswählen und einbauen.
-Die Vorschläge liegen spielbereit in `prototypen/reveal-animationen.html`.
+Die Vorschläge liegen spielbereit in `prototypen/enthuellung/`, gebaut mit three.js, und die Fragen dazu stehen in `issues/10-enthuellung-in-drei-dimensionen.md`.
 Der Nutzer hat noch nicht gewählt, also ist das die erste Frage.
+
+Die ältere Runde in `prototypen/reveal-animationen.html` ist damit erledigt.
+Sie war mit CSS und 2D-Canvas gebaut und wurde verworfen.
+Sie bleibt liegen, weil sie zeigt, wogegen die neue Runde antritt, nicht weil daraus noch etwas gewählt würde.
 
 Festgesetzt ist bereits: die Animation läuft gleich, ob gerade gezogen wurde oder ein Link geöffnet wird.
 Bisher zeigt ein geöffneter Link das Ergebnis sofort, es ist also eine echte Änderung an `src/app.js`.
 
 Offen und vor dem Einbau zu klären: wer den Link zum fünften Mal öffnet, sitzt jedes Mal die volle Enthüllung ab.
 Entweder ein Überspringen bei Berührung, oder einmal je Link und danach gemerkt.
+
+Ebenfalls offen und größer: ob die Seite three.js überhaupt laden darf.
+Vier der fünf Enthüllungen brauchen es, Marmor ließe sich ohne nachbauen.
+Das ist keine Kleinigkeit am Rande der Auswahl, sondern hängt mit ihr zusammen.
 
 ## Was den Zustand erklärt, ohne irgendwo zu stehen
 
@@ -49,9 +57,13 @@ Was dabei gelernt wurde und weiter gilt:
 - Screenshots über die ganze Seite zeigen unter der Fensterhöhe den Körpergrund, weil die Grundschichten `position: fixed` sind.
   Das ist ein Artefakt der Aufnahme, kein Fehler, solange der Körper denselben Grund trägt.
 
-**three.js ist jetzt ladbar.**
-Der Netzzugang ist frei, das CDN antwortet.
-Eine 3D-Variante müsste also nicht mehr ungeprüft geschrieben werden.
+**three.js ist jetzt ladbar, und es wird auch geladen.**
+Der Netzzugang ist frei, das CDN antwortet, und `prototypen/enthuellung/` holt sich three.js von dort.
+Was beim Bauen dieser Runde gelernt wurde, steht in `docs/agents/animation.md`.
+Wer eine Animation anfasst oder eine prüft, liest das vorher, sonst werden dieselben fünf Fehler noch einmal gemacht.
+
+Ein Punkt daraus gilt auch für alles andere, was sich bewegt: eine Animation, die nur von ihrem Fortschritt abhängt und nicht von dem, was vorher lief, lässt sich aufspulen und damit überhaupt erst prüfen.
+Ein Bildschirmfoto von fünf laufenden WebGL-Bühnen kostet über eine Sekunde, und auf die Uhr zu warten geht damit nicht.
 
 ## Fallen, die schon einmal zugeschnappt sind
 
