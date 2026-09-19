@@ -26,11 +26,16 @@ The reason is no longer a disappearing container but the plain one: the file is 
   Changing one is the maintainer's call, so ask before you do.
 - Both PowerShell and Git Bash.
   Everything the project runs is plain Node, so either shell works.
-- Playwright, as the one dev dependency, with the Chromium and Firefox builds installed.
-  Run `npm install` after a fresh clone, then `npx playwright install chromium firefox` once to fetch them.
+- Playwright, as the one dev dependency, with the Chromium, Firefox and WebKit builds installed.
+  Run `npm install` after a fresh clone, then `npx playwright install chromium firefox webkit` once to fetch them.
   The browsers live outside the repository, under `%LOCALAPPDATA%\ms-playwright`.
-  Firefox was added on 19 September 2026, after a fault that was invisible in Chromium and broke the page entirely in Firefox.
+  Edge needs no download: `chromium.launch({ channel: 'msedge' })` drives the one on the machine.
+  Firefox and WebKit were added on 19 September 2026, after a fault that was invisible in Chromium and broke the page entirely everywhere else.
   See `docs/agents/animation.md`.
+
+- three.js, committed under `vendor/three/` rather than installed.
+  `npm run three-holen` fetches it for the pinned version in `scripts/three-holen.mjs`.
+  It is not a dependency of the build, because there is no build; it is a file the site serves.
 
 ## The network is open
 

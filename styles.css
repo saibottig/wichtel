@@ -107,6 +107,40 @@ body {
   --rot: #a8322b;
 }
 
+/* Die Enthüllung
+
+   Eine Leinwand über allem, solange sie läuft. Sie bringt ihren eigenen dunklen
+   Grund mit, deckt die Seite also zu, und blendet beim Landen aus, während die
+   gezogene Farbe darunter hereinbricht.
+
+   Der Inhalt steht die ganze Zeit schon da, nur unsichtbar. Er muss stehen,
+   weil die Enthüllung an ihm misst, wohin der Buchstabe laufen soll. */
+
+.enthuellung {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: opacity 520ms ease;
+}
+
+.enthuellung.abgetreten {
+  opacity: 0;
+}
+
+.zustand {
+  transition: opacity 420ms ease;
+}
+
+.zustand.verdeckt {
+  opacity: 0;
+  /* Unsichtbar heißt auch unantastbar. Sonst lässt sich ein Knopf drücken,
+     den niemand sehen kann. */
+  pointer-events: none;
+}
+
 /* Die Bühne */
 
 .buehne {

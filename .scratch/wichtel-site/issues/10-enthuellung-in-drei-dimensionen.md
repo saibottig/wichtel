@@ -1,7 +1,7 @@
 # Die Enthüllung in drei Dimensionen
 
 Type: prototype
-Status: needs decision
+Status: resolved
 
 ## Question
 
@@ -48,32 +48,44 @@ Alle fünf enden an derselben Stelle: der Buchstabe wandert dorthin, wo die Seit
 Damit ist die Übergabe eine Überblendung und kein Sprung.
 Genau daran ist die erste Runde gescheitert.
 
-## Was noch zu entscheiden ist
+## Gewählt: Staub
 
-- **Welche der fünf.**
-  Das ist die eigentliche Frage dieses Tickets.
+Der Ausrichter hat Staub genommen.
+Die anderen vier bleiben liegen, weil sie zeigen, wogegen Staub angetreten ist, nicht weil daraus noch etwas gewählt würde.
 
-- **Ob three.js in die Seite darf.**
-  Die Seite hat bis heute keinen Build-Schritt und lief bis zum 19. September 2026 ganz ohne Abhängigkeit.
-  Playwright kam dazu, weil Animationen sonst nach Augenmaß ausgeliefert worden wären.
-  Eine Bibliothek, die der Besucher lädt, ist etwas anderes als eine, die nur hier läuft: three.js kostet ihn rund 130 Kilobyte über die Leitung, gut 660 ausgepackt.
-  Entweder das wird angenommen, oder die gewählte Enthüllung kommt ohne aus.
-  Von den fünf ist Marmor die einzige, die sich ohne größeren Verlust nachbauen ließe, weil sie nur eine Fläche und einen Shader braucht.
+Eingebaut in `src/enthuellung.js`, nachgeladen von `src/app.js`.
+Die Enthüllung läuft gleich, ob gerade gezogen wurde oder ein geteilter Link aufgeht.
 
-- **Wer den Link zum fünften Mal öffnet.**
-  Steht schon im Handoff und ist weiter offen: entweder Überspringen bei Berührung, oder einmal je Link und danach gemerkt.
-  Jede der fünf dauert gut drei Sekunden.
+### Die beiden Fragen, die daran hingen
 
-- **Was bei `prefers-reduced-motion` passiert.**
-  Die Vergleichsseite spielt dann nicht von selbst los, aber das ist eine Notlösung für den Vergleich.
-  Die Seite selbst braucht einen ruhenden Endzustand, und den liefert jede der fünf schon, weil ihr letztes Bild genau das ist, was die Seite ohnehin zeigt.
+**three.js wird mitgeliefert, nicht vom CDN geholt.**
+Es liegt unter `vendor/three/` im Repository und wird von derselben Adresse ausgeliefert wie der Rest der Seite.
+Kein Dritter bekommt die Anfragen der Gruppe zu sehen, und nichts kann ausfallen, ohne dass auch die Seite selbst ausgefallen wäre.
+Geholt wird mit `npm run three-holen`, die Version steht im Skript.
 
-## Wie geprüft wurde
+Die Bibliothek selbst in der gepressten Fassung, die Beigaben nicht.
+Zusammen sind das 204 Kilobyte über die Leitung und 872 Kilobyte im Repository.
+Die Zahl 130, die beim Fragen genannt wurde, war falsch: sie galt nur für `three.module.js` und ließ `three.core.js` aus, das den größeren Teil ausmacht.
 
-Mit Playwright gegen alle fünf gleichzeitig, aufgespult statt abgespielt.
-Durchgespielt mit Rot, Gestreift, Durchsichtig, Schwarz und Glitzer, jeweils über acht Zeitpunkte.
+**Die Enthüllung läuft immer voll durch.**
+Kein Überspringen bei Berührung, kein Merken je Link.
+Die Ziehung ist der Moment, und der geteilte Link soll ihn jedes Mal bringen.
 
-Gefunden und behoben wurden dabei unter anderem: ein Buchstabe, der halb aus dem Bild hing, weil vor dem Ausrichten gemessen wurde; Marmorierung, die als Farbgrieß ankam; Streifen, die im Raum steiler standen als auf der Seite; eine Dämpfung, die heller ausfiel als dieselbe Formel in CSS; und ein Lichtanteil, der aus Schwarz Mittelgrau machte.
-Keiner dieser Fehler war am Endbild zu sehen.
+Bei `prefers-reduced-motion` steht das Ergebnis weiterhin sofort.
+Das ist keine Abkürzung, sondern die Zusage an jemanden, der Bewegung nicht verträgt.
 
-Das Verfahren und die Fallen stehen in `docs/agents/animation.md`.
+### Was passiert, wenn three.js nicht ankommt
+
+Nichts Schlimmes.
+`src/app.js` lädt die Enthüllung nach und fängt den Fehler ab: dann läuft der alte Lauf, Buchstaben und Farben wechseln zwei Sekunden lang, und danach steht das Ergebnis.
+Geprüft, indem `vendor/` im Browser blockiert wurde.
+
+### Geprüft in
+
+Chromium, Firefox, WebKit und Edge, jeweils frisch gezogen und über einen geteilten Link, dazu ohne three.js und mit reduzierter Bewegung.
+Dass der Buchstabe genau dort landet, wo die Seite ihn hinsetzt, wurde nachgemessen: der vorhergesagte Kasten liegt auf dem gezeichneten Buchstaben, auf Handybreite wie auf Fensterbreite.
+
+## Was davon offen bleibt
+
+- **Der Jahreswechsel im Januar.** Unverändert offen, siehe `map.md`.
+- **Wie oft eine neue three.js-Fassung geholt wird.** Es gibt keinen Anlass, solange nichts klemmt. Die Version ist festgeschrieben und ändert sich nur, wenn jemand das Skript laufen lässt.

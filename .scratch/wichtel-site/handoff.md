@@ -12,23 +12,19 @@ Lies zuerst `map.md`, dann diesen Text.
 
 ## Worauf die nächste Sitzung zusteuert
 
-Eine von fünf Enthüllungs-Animationen auswählen und einbauen.
-Die Vorschläge liegen spielbereit in `prototypen/enthuellung/`, gebaut mit three.js, und die Fragen dazu stehen in `issues/10-enthuellung-in-drei-dimensionen.md`.
-Der Nutzer hat noch nicht gewählt, also ist das die erste Frage.
+Die Enthüllung ist gewählt, gebaut und eingebaut, siehe `issues/10-enthuellung-in-drei-dimensionen.md`.
+Staub, mit three.js aus `vendor/`, läuft gleich für eine frische Ziehung und für einen geteilten Link, jedes Mal voll durch.
+Was dort noch offen steht, ist klein.
 
-Die ältere Runde in `prototypen/reveal-animationen.html` ist damit erledigt.
-Sie war mit CSS und 2D-Canvas gebaut und wurde verworfen.
-Sie bleibt liegen, weil sie zeigt, wogegen die neue Runde antritt, nicht weil daraus noch etwas gewählt würde.
+Offen bleibt Ticket 09 und der Jahreswechsel im Januar.
 
-Festgesetzt ist bereits: die Animation läuft gleich, ob gerade gezogen wurde oder ein Link geöffnet wird.
-Bisher zeigt ein geöffneter Link das Ergebnis sofort, es ist also eine echte Änderung an `src/app.js`.
+Die vier nicht gewählten Entwürfe bleiben in `prototypen/enthuellung/` liegen.
+Sie zeigen, wogegen Staub angetreten ist.
+Die noch ältere Runde in `prototypen/reveal-animationen.html` war mit CSS und 2D-Canvas gebaut und ist zweimal überholt.
 
-Offen und vor dem Einbau zu klären: wer den Link zum fünften Mal öffnet, sitzt jedes Mal die volle Enthüllung ab.
-Entweder ein Überspringen bei Berührung, oder einmal je Link und danach gemerkt.
-
-Ebenfalls offen und größer: ob die Seite three.js überhaupt laden darf.
-Vier der fünf Enthüllungen brauchen es, Marmor ließe sich ohne nachbauen.
-Das ist keine Kleinigkeit am Rande der Auswahl, sondern hängt mit ihr zusammen.
+Der alte Lauf in `src/app.js` ist nicht weg, er ist jetzt der Rückfall.
+Kommt three.js nicht an, wechseln Buchstaben und Farben zwei Sekunden lang wie früher, und danach steht das Ergebnis.
+Die Seite hängt nicht an der Bibliothek, und das soll so bleiben.
 
 ## Was den Zustand erklärt, ohne irgendwo zu stehen
 

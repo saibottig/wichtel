@@ -53,10 +53,9 @@ They are not up for re-litigation without a new reason.
 - [Prototype the draw and the reveal](issues/07-prototype-the-draw-and-reveal.md): no throwaway prototype was built, because nothing was left open for one to answer. The reveal cycles for about two seconds and decelerates into the result, and stands still under `prefers-reduced-motion`.
 - [Add the DNS record at Cloudflare](issues/02-dns-record-at-cloudflare.md): done by the account holder. The DNS check passes and the certificate is active. Setting the custom domain again also restored the `CNAME` on `master`, which the deleted scratch branch had taken with it.
 - [Build and deploy the site](issues/08-build-and-deploy-the-site.md): built, pushed and live. Four pure modules behind a thin DOM adapter, no build step, published from `master`.
+- [Die Enthüllung in drei Dimensionen](issues/10-enthuellung-in-drei-dimensionen.md): five reveals were built with three.js and Staub was chosen. It plays the same whether a draw just happened or a shared link was opened, and it runs in full every time. three.js is committed under `vendor/`, not loaded from a CDN, so no third party sees the group's requests and nothing can fail that the site itself would survive. If it does not load, the old cycling reveal stands in.
 
 ## Not yet specified
-
-- [Die Enthüllung in drei Dimensionen](issues/10-enthuellung-in-drei-dimensionen.md): five reveals built with three.js sit playable in `prototypen/enthuellung/`, and the user has not chosen one yet. Riding on that choice is a second question: whether the site may load three.js at all, since it has no build step and carried no dependency until Playwright. Marmor is the only one of the five that could be rebuilt without it.
 
 - [Neu auslosen steht auch dem, der nur schauen kommt](issues/09-neu-auslosen-fuer-gaeste.md): the result page offers the same prominent "Neu auslosen" to a visitor arriving from the group chat as to the person who just drew. Nothing is overwritten, but the shared result is lost from their address bar and a competing link can end up back in the chat.
 

@@ -99,7 +99,14 @@ const zeigeFarbe = (farbe) => {
   $('ergebnis-farbname').textContent = farbe;
 };
 
-const schreibeErgebnis = (ergebnis) => {
+/**
+ * Schreibt das Ergebnis in die Seite.
+ *
+ * `fluten` bleibt aus, solange die Enthüllung läuft: der Text muss schon da
+ * sein, damit sich messen lässt, wo der Buchstabe landen wird, die Farbe aber
+ * darf erst hereinbrechen, wenn es so weit ist.
+ */
+const schreibeErgebnis = (ergebnis, { fluten = true } = {}) => {
   const { jahr, buchstabe, farbe } = ergebnis;
 
   $('ergebnis-jahr').textContent = `Wichteln ${jahr}`;
@@ -110,7 +117,7 @@ const schreibeErgebnis = (ergebnis) => {
   // Der Topf hängt am Ergebnis, nicht am Zeichnen: nach einer frischen
   // Auslosung läuft das Zeichnen nicht noch einmal.
   $('link-ergebnis-topf').href = `#${encodeToken(ergebnis)}~topf`;
-  grundFluten(farbe);
+  if (fluten) grundFluten(farbe);
 };
 
 const zeigeVergangeneJahre = (jahre) => {
@@ -253,23 +260,68 @@ const laufenLassen = () =>
     requestAnimationFrame(schritt);
   });
 
+/**
+ * Die Enthüllung, nachgeladen statt mitgeladen.
+ *
+ * Sie bringt three.js mit, und das sind gut zweihundert Kilobyte. Die wiegen
+ * nur, wo sie gebraucht werden, also nicht auf der Topf-Seite und nicht bei
+ * einem kaputten Link. Geholt wird sie trotzdem gleich beim Start, damit beim
+ * Klick auf Auslosen nichts mehr zu warten ist.
+ */
+let enthuellungLaedt = null;
+const enthuellungHolen = () => {
+  if (!enthuellungLaedt) {
+    enthuellungLaedt = import('./enthuellung.js');
+    // Scheitert sie schon hier, soll das keine unbehandelte Ablehnung sein.
+    // Wer sie später erwartet, bekommt den Fehler trotzdem.
+    enthuellungLaedt.catch(() => {});
+  }
+  return enthuellungLaedt;
+};
+
+/**
+ * Zeigt ein Ergebnis, mit Enthüllung davor.
+ *
+ * Gleich, ob gerade gezogen wurde oder ein geteilter Link aufgeht: der Moment
+ * gehört beiden. Bei `prefers-reduced-motion` steht das Ergebnis sofort, und
+ * wenn die Enthüllung nicht lädt, tut es der alte Lauf. Die Seite hängt nicht
+ * an three.js.
+ */
+const ergebnisZeigen = async (ergebnis) => {
+  schreibeErgebnis(ergebnis, { fluten: false });
+  zeigeBereich('ergebnis');
+  grundMoeglich();
+
+  const landen = () => {
+    grundFluten(ergebnis.farbe);
+    bereiche.ergebnis.classList.remove('verdeckt');
+  };
+
+  if (ruhigeBewegung()) {
+    landen();
+    return;
+  }
+
+  bereiche.ergebnis.classList.add('verdeckt');
+  try {
+    const { enthuellen } = await enthuellungHolen();
+    await enthuellen(ergebnis, $('ergebnis-buchstabe'), landen);
+  } catch {
+    bereiche.ergebnis.classList.remove('verdeckt');
+    await laufenLassen();
+    schreibeErgebnis(ergebnis);
+  }
+};
+
 const auslosen = async (archiv, jahr) => {
   const ergebnis = draw(jahr, filter);
 
   knoepfeSperren(true);
   $('kopier-rueckmeldung').textContent = '';
-  $('ergebnis-jahr').textContent = `Wichteln ${jahr}`;
-  // Die Farbe bricht erst beim Landen herein, sonst verpufft der Moment.
-  grundMoeglich();
-  zeigeBereich('ergebnis');
-
-  await laufenLassen();
-
-  schreibeErgebnis(ergebnis);
   // Das frisch gezogene Jahr steht oben und gehört nicht noch einmal in die Liste.
   zeigeVergangeneJahre(pastYears(archiv).filter((eintrag) => eintrag.jahr !== jahr));
-  bereiche.ergebnis.classList.add('gelandet');
-  setTimeout(() => bereiche.ergebnis.classList.remove('gelandet'), 600);
+
+  await ergebnisZeigen(ergebnis);
   knoepfeSperren(false);
 
   selbstGesetzterToken = encodeToken(ergebnis);
@@ -308,8 +360,9 @@ const zeichnen = (archiv, jahr) => {
   }
 
   if (ansicht.art === 'ergebnis') {
-    schreibeErgebnis(ansicht.ergebnis);
-    zeigeBereich('ergebnis');
+    // Ohne `await`: `zeichnen` ist der eine Zug, mit dem die Seite sich hinstellt,
+    // und der darf nicht drei Sekunden dauern.
+    ergebnisZeigen(ansicht.ergebnis);
   } else if (ansicht.art === 'auslosung') {
     grundMoeglich();
     $('auslosung-jahr').textContent = `Wichteln ${ansicht.jahr}`;
@@ -342,6 +395,7 @@ const starten = async () => {
   // Sofort, damit beim Laden nicht erst der nackte Seitengrund aufblitzt und
   // dann der Farbkreis nachrückt.
   grundMoeglich();
+  if (!ruhigeBewegung()) enthuellungHolen();
 
   let archiv = {};
   try {
