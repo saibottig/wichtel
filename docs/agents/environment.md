@@ -56,6 +56,29 @@ Then open http://localhost:8099.
 The live site is https://wichtel.turbodev.eu.
 It answers over HTTPS, and plain HTTP is redirected, because Enforce HTTPS is on.
 
+## The maintainer looks at this from a phone
+
+The work runs on his machine, but he is often not sitting at it.
+Then he has a phone and no local server, so anything that only exists at `http://localhost:8099` does not exist for him at all.
+
+Whatever he is meant to look at or choose between therefore belongs on `master`, and with it on the live site.
+That includes a round of drafts: it sits under `.scratch/…/prototypen/` and GitHub Pages serves it along with everything else, because `.nojekyll` in the root stops dot-prefixed paths from being dropped.
+
+```
+https://wichtel.turbodev.eu/.scratch/wichtel-site/prototypen/<runde>/
+```
+
+Three things belong with the push, or the push is only a claim:
+
+- Check beforehand how it looks and feels on a phone, not only in a window.
+  Playwright does that: `newPage({ ...devices['Pixel 7'] })`, and `touchscreen` instead of `mouse`.
+- After pushing, wait for the Pages build and actually fetch the live address.
+  `gh api repos/saibottig/wichtel/pages/builds/latest --jq '.status'` reads `building` until it is done.
+- Name the address in the reply, in full and tappable.
+
+A draft has to run without a build step for this, the same way the site does.
+Anything that only runs after `npm run something` never reaches him.
+
 ## Screenshots, and why they are taken mid-animation
 
 Against that same server, a plain Node script drives the browser:

@@ -36,7 +36,11 @@ When you are talking/posting on behalf of the maintainer using their identity, r
 ## Environment
 
 The work happens on the maintainer's own machine against the GitHub repository, not in a throwaway web container.
-The network is open, `gh` is signed in as the account holder, and no browser driver is installed.
+The network is open, `gh` is signed in as the account holder, and Playwright drives Chromium, Firefox, WebKit and Edge.
+
+The maintainer himself is often only on a phone and cannot run anything locally.
+Whatever he is meant to look at or choose between goes onto `master` and therefore onto the live site, drafts included, and the reply names the live address.
+Nothing that needs a build step, because the site has none.
 See `docs/agents/environment.md`.
 
 ## Agent skills
