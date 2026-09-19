@@ -326,3 +326,95 @@ body {
     animation: none;
   }
 }
+
+/* Der Topf
+
+   Alles, was zur Auswahl steht. Vor der Auslosung lässt er sich filtern, beim
+   Ergebnis zeigt er nur noch, woraus gezogen wurde. Was draußen ist, wird
+   nicht durchgestrichen, sondern steht unten für sich. */
+
+.topf-gruppe {
+  margin-top: 26px;
+}
+
+.gruppen-titel {
+  margin: 0 0 10px;
+  color: var(--schrift-leise);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.chips {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.chip {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 13px;
+  border: 1px solid var(--linie);
+  border-radius: 999px;
+  background: var(--pille);
+  color: var(--schrift);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+button.chip {
+  cursor: pointer;
+  transition:
+    transform 110ms ease,
+    opacity 140ms ease;
+}
+
+button.chip:hover {
+  transform: translateY(-1px);
+}
+
+button.chip:focus-visible {
+  outline: 2px solid var(--schrift);
+  outline-offset: 2px;
+}
+
+.chip .tupfer {
+  width: 13px;
+  height: 13px;
+}
+
+.topf-draussen {
+  padding-top: 22px;
+  border-top: 1px solid var(--linie);
+}
+
+.topf-draussen .chip {
+  opacity: 0.62;
+}
+
+.weiter {
+  margin: 18px 0 0;
+  font-size: 0.95rem;
+}
+
+.weiter a {
+  color: var(--schrift-leise);
+  text-underline-offset: 3px;
+}
+
+.weiter a:hover {
+  color: var(--schrift);
+}
+
+.zustand#bereich-topf {
+  min-height: 0;
+}

@@ -30,6 +30,7 @@
           <button type="button" class="knopf knopf-still" id="knopf-neu">Neu auslosen</button>
         </div>
         <p class="hinweis" id="kopier-rueckmeldung" role="status"></p>
+        <p class="weiter"><a id="link-ergebnis-topf" href="#topf">Topf ansehen</a></p>
       </section>
 
       <section id="bereich-auslosung" class="zustand" hidden>
@@ -41,6 +42,33 @@
           <button type="button" class="knopf knopf-haupt knopf-gross" id="knopf-auslosen">
             Auslosen
           </button>
+        </div>
+        <p class="weiter"><a id="link-auslosung-topf" href="#topf">Topf ansehen und filtern</a></p>
+      </section>
+
+      <section id="bereich-topf" class="zustand" hidden>
+        <p class="pille"><span id="topf-jahr"></span></p>
+        <p class="wort">Topf</p>
+        <p class="satz" id="topf-umfang"></p>
+
+        <div class="topf-gruppe">
+          <h2 class="gruppen-titel">Buchstaben</h2>
+          <ul class="chips" id="topf-buchstaben"></ul>
+        </div>
+        <div class="topf-gruppe">
+          <h2 class="gruppen-titel">Farben</h2>
+          <ul class="chips" id="topf-farben"></ul>
+        </div>
+
+        <div class="topf-gruppe topf-draussen" id="topf-draussen" hidden>
+          <h2 class="gruppen-titel">Nicht im Topf</h2>
+          <ul class="chips" id="topf-raus"></ul>
+          <p class="hinweis">Ein Klick legt einen Eintrag zurück.</p>
+        </div>
+
+        <div class="knopfreihe" id="topf-knoepfe">
+          <button type="button" class="knopf knopf-haupt" id="knopf-topf-auslosen">Auslosen</button>
+          <button type="button" class="knopf knopf-still" id="knopf-topf-zurueck">Zurück</button>
         </div>
       </section>
 

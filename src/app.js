@@ -7,7 +7,8 @@
  */
 
 import { draw, waehleAus } from './draw.js';
-import { encodeToken } from './token.js';
+import { encodeToken, encodeAusschluss } from './token.js';
+import { OHNE_AUSSCHLUSS, topfVon, ausgeschlossenVon, umschalten, istVoll, zaehle } from './filter.js';
 import { chooseView } from './view.js';
 import { pastYears } from './archive.js';
 import { BUCHSTABEN, FARBEN, FARBTOENE, darstellungFuer, tupferFuer } from './pool.js';
@@ -18,7 +19,17 @@ const bereiche = {
   ergebnis: $('bereich-ergebnis'),
   auslosung: $('bereich-auslosung'),
   fehler: $('bereich-fehler'),
+  topf: $('bereich-topf'),
 };
+
+/** Der Filter, den die Seite gerade zeigt. Steht immer auch in der Adresse. */
+let filter = OHNE_AUSSCHLUSS;
+
+/** Adresse für den Topf, mit Filter im Schlepptau, wenn einer gesetzt ist. */
+const topfAdresse = (f) => (istVoll(f) ? 'topf' : `topf~${encodeAusschluss(f)}`);
+
+/** Adresse für die Einladung, die sich denselben Filter merkt. */
+const auslosungAdresse = (f) => (istVoll(f) ? '' : `filter~${encodeAusschluss(f)}`);
 
 const ruhigeBewegung = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -47,12 +58,16 @@ const ALLE_MOEGLICH = `conic-gradient(from 0deg, ${[...FARBTOENE, FARBTOENE[0]].
  * gestreiftem Grund. Ungemusterte Farben laufen in voller Stärke durch, denn
  * an einer einzelnen Farbe gäbe es nichts zu dämpfen.
  */
-const grundFluten = (farbe) => {
+const grundFluten = (farbe, { ruhig = false } = {}) => {
   const { flut, ton, daempfung } = darstellungFuer(farbe);
 
+  // Ruhig heißt: ohne Muster. Auf der Topf-Seite liegen Dutzende kleiner Chips,
+  // und Punkte oder Streifen dahinter machen die Liste unlesbar. Die Farbe
+  // bleibt, damit der Sprung vom Ergebnis nicht wie eine fremde Seite wirkt.
+  const zeigeMuster = daempfung && !ruhig;
   $('grund-farbe').style.background = daempfung ? daempfung.basis : flut;
-  $('grund-muster').style.background = daempfung ? flut : 'none';
-  $('grund-muster').style.opacity = daempfung ? String(daempfung.staerke) : '0';
+  $('grund-muster').style.background = zeigeMuster ? flut : 'none';
+  $('grund-muster').style.opacity = zeigeMuster ? String(daempfung.staerke) : '0';
 
   // Die Schichten liegen fest am Fenster. Der Körper bekommt denselben Grund,
   // damit beim Überscrollen nichts vom alten durchblitzt. Kurzschreibweise,
@@ -84,12 +99,17 @@ const zeigeFarbe = (farbe) => {
   $('ergebnis-farbname').textContent = farbe;
 };
 
-const schreibeErgebnis = ({ jahr, buchstabe, farbe }) => {
+const schreibeErgebnis = (ergebnis) => {
+  const { jahr, buchstabe, farbe } = ergebnis;
+
   $('ergebnis-jahr').textContent = `Wichteln ${jahr}`;
   $('ergebnis-buchstabe').textContent = buchstabe;
   zeigeFarbe(farbe);
   $('ergebnis-regel').textContent =
     `Das Geschenk fängt mit ${buchstabe} an und ist ${farbe.toLowerCase()}.`;
+  // Der Topf hängt am Ergebnis, nicht am Zeichnen: nach einer frischen
+  // Auslosung läuft das Zeichnen nicht noch einmal.
+  $('link-ergebnis-topf').href = `#${encodeToken(ergebnis)}~topf`;
   grundFluten(farbe);
 };
 
@@ -122,6 +142,77 @@ const zeigeVergangeneJahre = (jahre) => {
       return zeile;
     }),
   );
+};
+
+/**
+ * Baut eine Reihe Chips.
+ *
+ * Im bearbeitbaren Topf sind es Knöpfe, beim Ergebnis nur noch Beschriftungen,
+ * denn da ist nichts mehr zu ändern.
+ */
+const chipsBauen = (liste, ziel, { art, bearbeitbar, beiKlick }) => {
+  ziel.replaceChildren(
+    ...liste.map((wert) => {
+      const zeile = document.createElement('li');
+      const chip = document.createElement(bearbeitbar ? 'button' : 'span');
+      chip.className = 'chip';
+
+      if (art === 'farben') {
+        const tupfer = document.createElement('span');
+        tupfer.className = 'tupfer';
+        tupfer.style.background = tupferFuer(wert);
+        chip.append(tupfer);
+      }
+      chip.append(document.createTextNode(wert));
+
+      if (bearbeitbar) {
+        chip.type = 'button';
+        chip.addEventListener('click', () => beiKlick(art, wert));
+      }
+      zeile.append(chip);
+      return zeile;
+    }),
+  );
+};
+
+const topfZeichnen = (ansicht) => {
+  const { bearbeitbar } = ansicht;
+  const drin = topfVon(filter);
+  const raus = ausgeschlossenVon(filter);
+  const anzahl = zaehle(filter);
+
+  $('topf-jahr').textContent = ansicht.ergebnis
+    ? `Wichteln ${ansicht.ergebnis.jahr}`
+    : `Wichteln ${ansicht.jahr}`;
+  $('topf-umfang').textContent = bearbeitbar
+    ? `${anzahl.buchstaben} Buchstaben und ${anzahl.farben} Farben stehen zur Auswahl.`
+    : `Gezogen wurde aus ${anzahl.buchstaben} Buchstaben und ${anzahl.farben} Farben.`;
+
+  chipsBauen(drin.buchstaben, $('topf-buchstaben'), { art: 'buchstaben', bearbeitbar, beiKlick: filterUmschalten });
+  chipsBauen(drin.farben, $('topf-farben'), { art: 'farben', bearbeitbar, beiKlick: filterUmschalten });
+
+  // Draußen heißt unten und für sich, nicht durchgestrichen. Beim Ergebnis
+  // steht es gar nicht da: dort zählt nur, woraus gezogen wurde.
+  const zeigeRaus = bearbeitbar && !istVoll(filter);
+  $('topf-draussen').hidden = !zeigeRaus;
+
+  const zeile = $('topf-raus');
+  chipsBauen(zeigeRaus ? raus.buchstaben : [], zeile, {
+    art: 'buchstaben',
+    bearbeitbar: true,
+    beiKlick: filterUmschalten,
+  });
+  if (zeigeRaus) {
+    const farbChips = document.createElement('ul');
+    chipsBauen(raus.farben, farbChips, {
+      art: 'farben',
+      bearbeitbar: true,
+      beiKlick: filterUmschalten,
+    });
+    zeile.append(...farbChips.children);
+  }
+
+  $('topf-knoepfe').hidden = !bearbeitbar;
 };
 
 /**
@@ -163,7 +254,7 @@ const laufenLassen = () =>
   });
 
 const auslosen = async (archiv, jahr) => {
-  const ergebnis = draw(jahr);
+  const ergebnis = draw(jahr, filter);
 
   knoepfeSperren(true);
   $('kopier-rueckmeldung').textContent = '';
@@ -195,8 +286,26 @@ const kopieren = async () => {
   }
 };
 
+let letztesArchiv = {};
+let letztesJahr = new Date().getFullYear();
+
+/** Nimmt einen Eintrag aus dem Topf oder legt ihn zurück. */
+const filterUmschalten = (art, wert) => {
+  filter = umschalten(filter, art, wert);
+  // Ohne Eintrag in der Geschichte, sonst führt Zurück durch jeden Klick.
+  history.replaceState(null, '', `#${topfAdresse(filter)}`);
+  zeichnen(letztesArchiv, letztesJahr);
+};
+
 const zeichnen = (archiv, jahr) => {
-  const ansicht = chooseView({ token: location.hash.slice(1), archiv, jahr });
+  letztesArchiv = archiv;
+  letztesJahr = jahr;
+
+  const ansicht = chooseView({ hash: location.hash.slice(1), archiv, jahr });
+
+  if (ansicht.filter) {
+    filter = ansicht.filter;
+  }
 
   if (ansicht.art === 'ergebnis') {
     schreibeErgebnis(ansicht.ergebnis);
@@ -204,7 +313,18 @@ const zeichnen = (archiv, jahr) => {
   } else if (ansicht.art === 'auslosung') {
     grundMoeglich();
     $('auslosung-jahr').textContent = `Wichteln ${ansicht.jahr}`;
+    $('link-auslosung-topf').href = `#${topfAdresse(filter)}`;
     zeigeBereich('auslosung');
+  } else if (ansicht.art === 'topf') {
+    // Der Topf zeigt, woraus gezogen wird. Beim Ergebnis behält er dessen Farbe,
+    // damit der Sprung nicht aussieht wie eine andere Seite.
+    if (ansicht.ergebnis) {
+      grundFluten(ansicht.ergebnis.farbe, { ruhig: true });
+    } else {
+      grundMoeglich();
+    }
+    topfZeichnen(ansicht);
+    zeigeBereich('topf');
   } else {
     // Der genaue Grund steht im Token und ist für das Archiv-Skript gedacht,
     // nicht für die Gruppe. Die Seite nennt den wahrscheinlichen Fall.
@@ -235,10 +355,13 @@ const starten = async () => {
 
   zeichnen(archiv, jahr);
 
-  for (const id of ['knopf-auslosen', 'knopf-neu', 'knopf-fehler-auslosen']) {
+  for (const id of ['knopf-auslosen', 'knopf-neu', 'knopf-fehler-auslosen', 'knopf-topf-auslosen']) {
     $(id).addEventListener('click', () => auslosen(archiv, jahr));
   }
   $('knopf-kopieren').addEventListener('click', kopieren);
+  $('knopf-topf-zurueck').addEventListener('click', () => {
+    location.hash = auslosungAdresse(filter);
+  });
 
   window.addEventListener('hashchange', () => {
     if (location.hash.slice(1) === selbstGesetzterToken) {

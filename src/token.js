@@ -11,10 +11,16 @@
  * kodiert Werte statt Indizes, damit ein Token lesbar bleibt, wenn sich ein
  * Topf später ändert.
  *
- * @typedef {{ jahr: number, buchstabe: string, farbe: string }} Ergebnis
+ * @typedef {import('./filter.js').Filter} Filter
+ * @typedef {{ jahr: number, buchstabe: string, farbe: string, filter: Filter }} Ergebnis
  */
 
+import { OHNE_AUSSCHLUSS, istVoll, ausgeschlossenVon } from './filter.js';
+
 const TRENNER = '|';
+/** Trennt die beiden Listen im Filterteil, und deren Einträge untereinander. */
+const ARTEN_TRENNER = ';';
+const LISTEN_TRENNER = ',';
 const FRUEHESTES_JAHR = 2000;
 const SPAETESTES_JAHR = 2199;
 
@@ -28,7 +34,35 @@ const pruefsumme = (text) => {
   return (h >>> 0).toString(36).padStart(7, '0').slice(-4);
 };
 
-const nutzlast = ({ jahr, buchstabe, farbe }) => [jahr, buchstabe, farbe].join(TRENNER);
+/**
+ * Der Filterteil, oder nichts, wenn der Topf voll ist.
+ *
+ * Ein voller Topf ist der Normalfall, und dann sieht der Token genauso aus wie
+ * vor dem Filter. Das hält den üblichen Link kurz und lässt alte Links gelten.
+ */
+const filterTeil = (filter) => {
+  if (!filter || istVoll(filter)) {
+    return null;
+  }
+  const raus = ausgeschlossenVon(filter);
+  return [raus.buchstaben.join(LISTEN_TRENNER), raus.farben.join(LISTEN_TRENNER)].join(
+    ARTEN_TRENNER,
+  );
+};
+
+const nutzlast = ({ jahr, buchstabe, farbe, filter }) => {
+  const teil = filterTeil(filter);
+  const felder = [jahr, buchstabe, farbe];
+  return (teil === null ? felder : [...felder, teil]).join(TRENNER);
+};
+
+const filterAus = (teil) => {
+  const [buchstaben, farben] = teil.split(ARTEN_TRENNER);
+  return ausgeschlossenVon({
+    buchstaben: buchstaben ? buchstaben.split(LISTEN_TRENNER) : [],
+    farben: farben ? farben.split(LISTEN_TRENNER) : [],
+  });
+};
 
 const zuBase64Url = (text) => {
   const bytes = new TextEncoder().encode(text);
@@ -41,6 +75,28 @@ const ausBase64Url = (token) => {
   const binaer = atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, '='));
   const bytes = Uint8Array.from(binaer, (zeichen) => zeichen.charCodeAt(0));
   return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+};
+
+/**
+ * Kodiert einen Filter für sich, für den Link auf den Topf.
+ * @param {Filter} filter
+ * @returns {string}
+ */
+export const encodeAusschluss = (filter) => zuBase64Url(filterTeil(filter) ?? ARTEN_TRENNER);
+
+/**
+ * Liest einen Filter aus seinem eigenen Token.
+ * Unlesbares gilt als voller Topf, denn ein kaputter Filter darf die Seite
+ * nicht aufhalten.
+ * @param {string} token
+ * @returns {Filter}
+ */
+export const decodeAusschluss = (token) => {
+  try {
+    return filterAus(ausBase64Url(token));
+  } catch {
+    return OHNE_AUSSCHLUSS;
+  }
 };
 
 /**
@@ -72,12 +128,14 @@ export const decodeToken = (token) => {
   }
 
   const teile = klartext.split(TRENNER);
-  if (teile.length !== 4) {
+  // Vier Felder heißt ein Link von vor dem Filter, also voller Topf.
+  if (teile.length !== 4 && teile.length !== 5) {
     throw new Error('Token ist unvollständig.');
   }
 
-  const [rohesJahr, buchstabe, farbe, mitgelieferteSumme] = teile;
-  const kern = [rohesJahr, buchstabe, farbe].join(TRENNER);
+  const mitgelieferteSumme = teile.at(-1);
+  const [rohesJahr, buchstabe, farbe] = teile;
+  const kern = teile.slice(0, -1).join(TRENNER);
   if (pruefsumme(kern) !== mitgelieferteSumme) {
     throw new Error('Token wurde verändert oder abgeschnitten.');
   }
@@ -90,5 +148,10 @@ export const decodeToken = (token) => {
     throw new Error('Token nennt keinen Buchstaben oder keine Farbe.');
   }
 
-  return { jahr, buchstabe, farbe };
+  return {
+    jahr,
+    buchstabe,
+    farbe,
+    filter: teile.length === 5 ? filterAus(teile[3]) : OHNE_AUSSCHLUSS,
+  };
 };

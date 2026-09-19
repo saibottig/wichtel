@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
 import { draw, waehleAus } from '../src/draw.js';
+import { OHNE_AUSSCHLUSS } from '../src/filter.js';
 import { BUCHSTABEN, FARBEN } from '../src/pool.js';
 
 /** Gibt die vorgegebenen Werte der Reihe nach zurueck, statt zu wuerfeln. */
@@ -11,39 +12,62 @@ const zufallAus = (...werte) => {
 };
 
 test('die Auslosung reicht das Jahr durch', () => {
-  assert.equal(draw(2026, zufallAus(0, 0)).jahr, 2026);
+  assert.equal(draw(2026, OHNE_AUSSCHLUSS, zufallAus(0, 0)).jahr, 2026);
 });
 
 test('null trifft den ersten Eintrag beider Toepfe', () => {
-  assert.deepEqual(draw(2026, zufallAus(0, 0)), {
+  assert.deepEqual(draw(2026, OHNE_AUSSCHLUSS, zufallAus(0, 0)), {
     jahr: 2026,
     buchstabe: BUCHSTABEN[0],
     farbe: FARBEN[0],
+    filter: OHNE_AUSSCHLUSS,
   });
 });
 
 test('knapp unter eins trifft den letzten Eintrag, nicht daneben', () => {
-  const ergebnis = draw(2026, zufallAus(0.9999999, 0.9999999));
+  const ergebnis = draw(2026, OHNE_AUSSCHLUSS, zufallAus(0.9999999, 0.9999999));
   assert.equal(ergebnis.buchstabe, BUCHSTABEN.at(-1));
   assert.equal(ergebnis.farbe, FARBEN.at(-1));
 });
 
 test('jeder Eintrag beider Toepfe ist erreichbar', () => {
   const gezogeneBuchstaben = BUCHSTABEN.map(
-    (_, i) => draw(2026, zufallAus(i / BUCHSTABEN.length, 0)).buchstabe,
+    (_, i) => draw(2026, OHNE_AUSSCHLUSS, zufallAus(i / BUCHSTABEN.length, 0)).buchstabe,
   );
   assert.deepEqual(gezogeneBuchstaben, BUCHSTABEN);
 
-  const gezogeneFarben = FARBEN.map((_, i) => draw(2026, zufallAus(0, i / FARBEN.length)).farbe);
+  const gezogeneFarben = FARBEN.map((_, i) => draw(2026, OHNE_AUSSCHLUSS, zufallAus(0, i / FARBEN.length)).farbe);
   assert.deepEqual(gezogeneFarben, FARBEN);
 });
 
 test('ohne vorgegebenen Zufall wird trotzdem gueltig gezogen', () => {
-  const ergebnis = draw(2026);
+  const ergebnis = draw(2026, OHNE_AUSSCHLUSS);
   assert.ok(BUCHSTABEN.includes(ergebnis.buchstabe));
   assert.ok(FARBEN.includes(ergebnis.farbe));
 });
 
 test('waehleAus greift auch bei genau eins noch in den Topf', () => {
   assert.equal(waehleAus(['a', 'b', 'c'], () => 1), 'c');
+});
+
+test('gezogen wird nur aus dem, was der Filter übrig lässt', () => {
+  const filter = { buchstaben: ['A', 'B'], farben: ['Rot'] };
+
+  assert.equal(draw(2026, filter, zufallAus(0, 0)).buchstabe, 'C');
+  assert.equal(draw(2026, filter, zufallAus(0, 0)).farbe, 'Blau');
+});
+
+test('über viele Ziehungen taucht kein ausgeschlossener Eintrag auf', () => {
+  const filter = { buchstaben: ['A', 'B', 'C'], farben: ['Rot', 'Blau', 'Glitzer'] };
+
+  for (let i = 0; i < 400; i += 1) {
+    const { buchstabe, farbe } = draw(2026, filter);
+    assert.ok(!filter.buchstaben.includes(buchstabe), `zog ${buchstabe}`);
+    assert.ok(!filter.farben.includes(farbe), `zog ${farbe}`);
+  }
+});
+
+test('das Ergebnis trägt den Filter mit, aus dem es stammt', () => {
+  const filter = { buchstaben: ['Q'], farben: [] };
+  assert.deepEqual(draw(2026, filter, zufallAus(0, 0)).filter, filter);
 });

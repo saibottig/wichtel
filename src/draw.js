@@ -4,7 +4,7 @@
  * Der Zufall wird hereingereicht, damit die Ziehung prüfbar bleibt.
  */
 
-import { BUCHSTABEN, FARBEN } from './pool.js';
+import { topfVon } from './filter.js';
 
 /** @typedef {import('./token.js').Ergebnis} Ergebnis */
 
@@ -27,12 +27,20 @@ export const waehleAus = (topf, zufall) =>
  * Die Auslosung bindet die ganze Gruppe: ein Buchstabe und eine Farbe pro Jahr,
  * nicht einer pro Person.
  *
+ * Gezogen wird nur aus dem, was der Filter übrig lässt. Das Ergebnis trägt den
+ * Filter mit, damit später nachvollziehbar bleibt, woraus gezogen wurde.
+ *
  * @param {number} jahr
+ * @param {import('./filter.js').Filter} filter
  * @param {() => number} [zufall] Quelle im Bereich [0, 1), vorgebbar für Tests
  * @returns {Ergebnis}
  */
-export const draw = (jahr, zufall = Math.random) => ({
-  jahr,
-  buchstabe: waehleAus(BUCHSTABEN, zufall),
-  farbe: waehleAus(FARBEN, zufall),
-});
+export const draw = (jahr, filter, zufall = Math.random) => {
+  const topf = topfVon(filter);
+  return {
+    jahr,
+    buchstabe: waehleAus(topf.buchstaben, zufall),
+    farbe: waehleAus(topf.farben, zufall),
+    filter,
+  };
+};
