@@ -33,13 +33,19 @@ When you are working on something that would benefit from being informed by the 
 
 When you are talking/posting on behalf of the maintainer using their identity, read ~/VOICE.md to match the intended voice and communication style.
 
+## Environment
+
+The work happens on the maintainer's own machine against the GitHub repository, not in a throwaway web container.
+The network is open, `gh` is signed in as the account holder, and no browser driver is installed.
+See `docs/agents/environment.md`.
+
 ## Agent skills
 
 ### Issue tracker
 
 Issues and specs live as markdown files under `.scratch/<feature-slug>/`, one file per ticket.
 Commit them.
-Web sessions run in throwaway containers, so an uncommitted ticket is lost when the container is reclaimed.
+The file is the only record there is, so an uncommitted ticket is invisible to the next session and to anyone else working from the repository.
 See `docs/agents/issue-tracker.md`.
 
 ### Triage labels

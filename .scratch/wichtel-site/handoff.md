@@ -1,7 +1,10 @@
 # Handoff: Wichtel-Seite
 
-Stand: 2026-09-19, Commit `b14d0ab` auf `master`.
+Stand: 2026-09-19, Commit `3c441db` auf `master`.
 Die Seite ist live unter https://wichtel.turbodev.eu.
+
+Seit dem 19. September 2026 läuft die Arbeit auf dem Rechner des Ausrichters statt im Web-Container.
+Was das ändert, steht in `docs/agents/environment.md`.
 
 Dieses Dokument wiederholt nicht, was anderswo schon steht.
 Die Karte ist `map.md`, die Entscheidungen liegen in `issues/`, das Warum steht in den Commit-Nachrichten.
@@ -32,17 +35,23 @@ Nicht reparieren, bevor es in einem echten Jahr stört.
 ## Wie in dieser Umgebung geprüft wird
 
 Es gibt keine Browser-Tests im Projekt, nur `npm test` mit `node --test` und 73 Tests über die reinen Module.
-Der Rest lief über Playwright von Hand, und das hat mehr Fehler gefunden als die Tests:
+Die laufen hier und sind grün.
 
-- `npx http-server -p 8099 -s` im Wurzelverzeichnis, dann Playwright aus `/opt/node22/lib/node_modules/playwright`.
+Der Rest lief über Playwright von Hand, und das hat mehr Fehler gefunden als die Tests.
+Playwright ist inzwischen als einzige Abhängigkeit im Projekt eingetragen, mit Chromium daneben installiert.
+`npx --yes http-server -p 8099 -s` im Wurzelverzeichnis, dann von einem Node-Skript aus auf http://127.0.0.1:8099 losgehen.
+Das Rezept steht in `docs/agents/environment.md`.
+
+Was dabei gelernt wurde und weiter gilt:
+
 - Bildschirmfotos **mitten** in einer Animation, nicht nur am Ende.
   Vier von fünf Animationsfehlern waren am Endbild unsichtbar.
 - Screenshots über die ganze Seite zeigen unter der Fensterhöhe den Körpergrund, weil die Grundschichten `position: fixed` sind.
   Das ist ein Artefakt der Aufnahme, kein Fehler, solange der Körper denselben Grund trägt.
 
-**three.js ist hier nicht ladbar.**
-Der Proxy lehnt das CDN mit 403 ab.
-Wer eine 3D-Variante bauen soll, braucht eine Umgebung mit Netzzugang, sonst entsteht ungeprüfter Code.
+**three.js ist jetzt ladbar.**
+Der Netzzugang ist frei, das CDN antwortet.
+Eine 3D-Variante müsste also nicht mehr ungeprüft geschrieben werden.
 
 ## Fallen, die schon einmal zugeschnappt sind
 
@@ -53,13 +62,16 @@ Wer eine 3D-Variante bauen soll, braucht eine Umgebung mit Netzzugang, sonst ent
 - Der eingefrorene Token in `tests/token.test.js` bewacht die Kodierung.
   Schlägt er fehl, sind alle geteilten Links unlesbar geworden.
 - Kein Linter im Projekt.
-  Das ist unentschieden, nicht vergessen: der Preis wäre eine Abhängigkeit und eine Sperrdatei in einem Projekt, das bisher ohne beides auskommt.
+  Das ist unentschieden, nicht vergessen.
+  Das alte Gegenargument, es gäbe weder Abhängigkeit noch Sperrdatei, ist mit Playwright hinfällig geworden.
+  Entschieden ist der Linter damit trotzdem nicht, er muss sich selbst lohnen.
 
 ## Sonst noch offen
 
 - Ticket 09, `issues/09-neu-auslosen-fuer-gaeste.md`: "Neu auslosen" steht dem Besucher aus dem Gruppenchat genauso laut zur Verfügung wie dem, der gerade gezogen hat.
-- "Enforce HTTPS" in den Repository-Einstellungen. Nur der Account-Inhaber kommt daran, siehe Ticket 02.
 - Der Jahreswechsel im Januar, in `map.md` unter "Not yet specified".
+
+"Enforce HTTPS" ist erledigt und steht hier nicht mehr offen, siehe den Nachtrag in Ticket 02.
 
 ## Arbeitsweise, die der Nutzer eingefordert hat
 

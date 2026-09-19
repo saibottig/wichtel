@@ -30,3 +30,14 @@ Die Vermutung stimmte also, dass die erste `CNAME` mit dem gelöschten Scratch-Z
 
 - Wie lange die Propagation tatsächlich gedauert hat.
 - Ob "Enforce HTTPS" inzwischen angehakt werden konnte. GitHub gibt den Haken erst bis zu 24 Stunden nach bestandener DNS-Prüfung frei.
+
+## Nachtrag vom 19. September 2026
+
+"Enforce HTTPS" ist angehakt.
+
+Die Arbeit läuft seitdem auf dem Rechner des Ausrichters, und dort ist `gh` als Account-Inhaber angemeldet.
+Damit war die Einstellung ohne Dashboard nachzusehen: `gh api repos/saibottig/wichtel/pages` meldet `"https_enforced": true`, das Zertifikat steht auf `approved` und läuft bis zum 17. Dezember 2026.
+Ein Aufruf über `http://wichtel.turbodev.eu` antwortet mit 301 auf die HTTPS-Adresse.
+
+Offen bleibt nur, wie lange die Propagation gedauert hat.
+Das ist nirgends mehr abrufbar und wird nicht nachgetragen.

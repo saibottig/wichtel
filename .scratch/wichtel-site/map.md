@@ -9,7 +9,8 @@ Reaching the destination means the site is deployed and reachable at that addres
 
 **Reached.**
 The site answers at that address over HTTPS and was opened and checked there.
-What remains below is not the destination: one settings checkbox on ticket 02, and one question in the fog.
+Enforce HTTPS is on as well, so plain HTTP is redirected, which closes the last settings item on ticket 02.
+What remains below is not the destination, only the questions in the fog.
 
 ## Notes
 
@@ -22,6 +23,9 @@ Wichteln, Glitzer and Bunt are domain terms, not phrases to translate away.
 
 Repository house rules in `AGENTS.md` apply to everything produced here.
 No em dash, one sentence per line in long Markdown, and no co-author or session-link trailers in commit messages.
+
+The work happens on the maintainer's machine, not in a web container.
+`docs/agents/environment.md` says what that machine has and what it still cannot do.
 
 Skills every session should consult: grilling and domain-modeling for decisions, prototype for anything about look or behaviour, research for facts outside this repository.
 
