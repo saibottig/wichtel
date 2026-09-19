@@ -26,9 +26,11 @@ The reason is no longer a disappearing container but the plain one: the file is 
   Changing one is the maintainer's call, so ask before you do.
 - Both PowerShell and Git Bash.
   Everything the project runs is plain Node, so either shell works.
-- Playwright, as the one dev dependency, with the Chromium build installed.
-  Run `npm install` after a fresh clone, then `npx playwright install chromium` once to fetch the browser.
-  The browser lives outside the repository, under `%LOCALAPPDATA%\ms-playwright`.
+- Playwright, as the one dev dependency, with the Chromium and Firefox builds installed.
+  Run `npm install` after a fresh clone, then `npx playwright install chromium firefox` once to fetch them.
+  The browsers live outside the repository, under `%LOCALAPPDATA%\ms-playwright`.
+  Firefox was added on 19 September 2026, after a fault that was invisible in Chromium and broke the page entirely in Firefox.
+  See `docs/agents/animation.md`.
 
 ## The network is open
 

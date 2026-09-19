@@ -38,6 +38,39 @@ Run it with a colour and a letter to pin the draw:
 node .scratch/wichtel-site/prototypen/enthuellung/bilder.mjs <Ordner> Gestreift M
 ```
 
+## An import map does not survive being embedded
+
+The prototype writes `import * as THREE from 'three'` and lets an import map resolve the name.
+That is the ordinary three.js spelling and it works everywhere, as long as the page brings its own import map.
+
+Embedded in someone else's page it does not work.
+An import map has to be in place before the first module loads, and an embedding page loads its own module first.
+Firefox and Safari then discard the map, every bare name fails to resolve, and the page renders nothing at all.
+Chrome 133 and later relaxed that rule, so in Chrome it keeps working and the fault stays invisible.
+
+`artefakt.mjs` builds a copy with no bare names for exactly that case: three.js by full CDN address, and the `examples/jsm` add-ons fetched and laid alongside, because they write `from 'three'` themselves.
+
+Two things it got wrong first, both worth keeping in mind for any similar rewrite:
+
+- three.js writes its imports across several lines, so the address sits alone on the closing-brace line.
+  A rewriter that only inspects the first line of a statement leaves exactly the addresses that matter.
+- The check at the end only inspected the files written by hand, which were clean.
+  The bare name was in a fetched file, and the page still broke.
+  A check that only covers your own work finds nothing.
+
+## Test in a second engine before shipping
+
+This was found by the user, not by the tests, and it would have been found in a minute by opening it twice.
+The whole reveal is WebGL, canvas, container queries and modules, which is the corner of the platform where engines differ most.
+
+Playwright's Firefox build is installed for this now, next to Chromium:
+
+```
+npx playwright install firefox
+```
+
+Reproducing the fault needs the embedding, not just the other engine: a module script in the `<head>` ahead of the page's own import map is what makes Firefox reject it.
+
 ## Take the picture in the middle, not at the end
 
 This was already true of the CSS round and it stayed true.
