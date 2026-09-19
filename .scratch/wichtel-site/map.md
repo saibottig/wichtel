@@ -52,6 +52,8 @@ They are not up for re-litigation without a new reason.
 
 ## Not yet specified
 
+- [Neu auslosen steht auch dem, der nur schauen kommt](issues/09-neu-auslosen-fuer-gaeste.md): the result page offers the same prominent "Neu auslosen" to a visitor arriving from the group chat as to the person who just drew. Nothing is overwritten, but the shared result is lost from their address bar and a competing link can end up back in the chat.
+
 - What the site should do in the months after Christmas. The page takes the calendar year, so on 1 January it stops showing the result the group is still wichteling under and invites a draw for a Wichteln eleven months away. Nobody will open it then, which is why this was left rather than guessed at.
 
 ## Out of scope
