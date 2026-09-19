@@ -55,9 +55,9 @@ They are not up for re-litigation without a new reason.
 - [Build and deploy the site](issues/08-build-and-deploy-the-site.md): built, pushed and live. Four pure modules behind a thin DOM adapter, no build step, published from `master`.
 - [Die Enthüllung in drei Dimensionen](issues/10-enthuellung-in-drei-dimensionen.md): five reveals were built with three.js and Staub was chosen. It plays the same whether a draw just happened or a shared link was opened, and it runs in full every time. three.js is committed under `vendor/`, not loaded from a CDN, so no third party sees the group's requests and nothing can fail that the site itself would survive. If it does not load, the old cycling reveal stands in.
 
-## Not yet specified
+- [Die Enthüllung zum Mitmachen](issues/11-enthuellung-zum-mitmachen.md): five interactive reveals were built, where the result is uncovered by hand instead of playing by itself, and none of them was taken. Staub stays as it is. The drafts stay in `prototypen/mitmachen/` as the record of what Staub was measured against, and are not maintained further. The question the round leaves behind is not about gestures: a shared link is read by someone who only wanted to look something up, and that ties to ticket 09.
 
-- [Die Enthüllung zum Mitmachen](issues/11-enthuellung-zum-mitmachen.md): five interactive reveals are built and playable in `prototypen/mitmachen/`, where the result is uncovered by hand instead of playing by itself. Nothing is chosen yet, and whether any of them replaces Staub is open. The question that hangs on it is the shared link: a gesture is a gift to the person drawing and an obstacle to the person from the group chat, which ties it to ticket 09.
+## Not yet specified
 
 - [Neu auslosen steht auch dem, der nur schauen kommt](issues/09-neu-auslosen-fuer-gaeste.md): the result page offers the same prominent "Neu auslosen" to a visitor arriving from the group chat as to the person who just drew. Nothing is overwritten, but the shared result is lost from their address bar and a competing link can end up back in the chat.
 

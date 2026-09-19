@@ -50,6 +50,15 @@ body {
   color: #ffbfa8;
 }
 
+/* Die Runde ist entschieden. Wer die Seite noch einmal oeffnet, soll das
+   sehen, bevor er anfaengt zu vergleichen. */
+.kopf p.entschieden {
+  color: rgba(242, 241, 238, 0.86);
+  border-left: 3px solid #e8b84b;
+  padding: 2px 0 2px 12px;
+  margin-bottom: 12px;
+}
+
 .steuerung {
   display: flex;
   flex-wrap: wrap;

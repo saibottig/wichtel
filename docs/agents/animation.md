@@ -138,6 +138,11 @@ That single flaw did more damage to the first round than any missing effect.
 So every reveal ends by moving its letter to exactly where `.riese` sits in the page, at exactly that size, and fades out there.
 `landeplatz()` in `buehne.js` computes that spot.
 
+The same fault came back a second time in the interactive round, wearing a different coat: the page's colour flood is a layer of its own above the canvas, and fading it in halfway through the flight covers the letter before it has arrived.
+The letter then vanishes mid-air and reappears small in the corner, which is the jump again, this time caused by the hand-off's timing rather than its geometry.
+Hand over at the moment the flight ends, not earlier.
+While that hand-over runs, the letter also has to take the page's text colour, or the crossfade swaps a dark letter for a white one at the same spot.
+
 Do not estimate it.
 The vertical position depends on where the baseline falls inside a line box with `line-height: 1`, which depends on the font's ascender and descender, not on the font size.
 Ask the font through `measureText`: `fontBoundingBoxAscent`, `fontBoundingBoxDescent` for the line, `actualBoundingBox*` for the ink of that one glyph.

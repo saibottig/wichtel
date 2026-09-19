@@ -18,8 +18,13 @@ Was dort noch offen steht, ist klein.
 
 Offen bleibt Ticket 09 und der Jahreswechsel im Januar.
 
-Die vier nicht gewählten Entwürfe bleiben in `prototypen/enthuellung/` liegen.
+Eine zweite Runde wurde daraufhin noch gefragt und beantwortet: fünf Enthüllungen zum Mitmachen, bei denen das Ergebnis von Hand aufgedeckt wird statt von selbst abzulaufen, siehe `issues/11-enthuellung-zum-mitmachen.md`.
+Der Ausrichter hat keine davon genommen.
+Es bleibt bei Staub, und die Frage ist beantwortet und nicht vertagt.
+
+Die vier nicht gewählten Entwürfe bleiben in `prototypen/enthuellung/` liegen, die fünf aus der Mitmach-Runde in `prototypen/mitmachen/`.
 Sie zeigen, wogegen Staub angetreten ist.
+Weitergepflegt wird keiner davon.
 Die noch ältere Runde in `prototypen/reveal-animationen.html` war mit CSS und 2D-Canvas gebaut und ist zweimal überholt.
 
 Der alte Lauf in `src/app.js` ist nicht weg, er ist jetzt der Rückfall.

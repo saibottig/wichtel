@@ -1,7 +1,7 @@
 # Die Enthüllung zum Mitmachen
 
 Type: prototype
-Status: open
+Status: resolved
 
 ## Question
 
@@ -99,13 +99,26 @@ Sie liegt jetzt einen Hauch darüber hinaus.
 Ein GLSL-Shader in einem Template mit dem Wort `mix` in Anführungszeichen im Kommentar, und das Modul lädt nicht mehr.
 Die Meldung nennt das Wort dahinter, nicht den Backtick.
 
-## Was offen ist
+## Entschieden: keiner, es bleibt bei Staub
 
-- **Welcher Entwurf, wenn überhaupt.** Die Wahl steht noch aus.
+Der Ausrichter hat die fünf live angesehen und keinen davon genommen.
+Es bleibt bei Staub, unverändert, wie in Ticket 10 beschrieben.
+
+Damit ist die Frage beantwortet und nicht vertagt.
+Wer sie noch einmal aufmacht, tut das gegen eine Entscheidung und nicht in eine Lücke hinein.
+
+Die fünf Entwürfe bleiben liegen, aus demselben Grund wie die vier aus Ticket 10: sie zeigen, wogegen Staub angetreten ist.
+Sie werden nicht weitergepflegt.
+Was sie kosten, ist der Ordner `prototypen/mitmachen/`; die Seite selbst rührt keine Zeile davon an, und `npm test` kennt sie nicht.
+
+Was aus dieser Runde bleibt, steht unter "Was beim Bauen gelernt wurde" und gilt für jede Enthüllung, die je wieder angefasst wird - besonders die Stelle, an der die Farbflut den Buchstaben zudeckt, bevor er angekommen ist.
+Das ist derselbe Fehler, der schon die erste Runde gekostet hat, und er ist jetzt zum zweiten Mal aufgetreten.
+
+## Was damit nicht entschieden ist
+
 - **Ob Mitmachen den geteilten Link verträgt.** Für den, der zieht, ist die Geste ein Gewinn. Für den, der den Link aus dem Gruppenchat öffnet, ist sie eine Hürde vor einer Antwort, die er nur nachlesen wollte. Hängt mit Ticket 09 zusammen.
-- **Blasse Farben auf blassem Grund.** Weiß und Pastell heben sich auf der Karte kaum vom Papier ab. Dasselbe Problem wie bei Bunt auf der Seite, und wie dort nicht zu reparieren, bevor es in einem echten Jahr stört.
-- **Was bei reduzierter Bewegung geschieht.** Staub steht dann sofort still. Eine Decke, die niemand wegwischen will, muss genauso sofort weg sein, und das ist noch nicht gebaut.
-- **Ob die Schneekugel zwei Balken braucht.** Sie deckt beides auf einmal auf, und die Vergleichsseite zeigt trotzdem zwei Fortschrittsbalken mit demselben Wert.
+Die übrigen Fragen dieser Runde hingen an den Entwürfen und sind mit ihnen erledigt: die reduzierte Bewegung unter einer Decke, die blassen Farben auf der Karte, die zwei Fortschrittsbalken der Schneekugel.
+Sie stehen hier nicht mehr als offen, weil nichts mehr da ist, woran sie hängen.
 
 ## Geprüft in
 
