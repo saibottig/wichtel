@@ -4,8 +4,12 @@ Label: wayfinder:map
 
 ## Destination
 
-A static site live at https://wichtel.turbodev.eu that draws one starting letter and one colour per year for the group, shares that result as a link, and lists the draws from previous years.
+A static site live at https://wichtel.turbodev.eu that draws one starting letter and one colour per year for a group, shares that result as a link, and lists the draws from previous years.
 Reaching the destination means the site is deployed and reachable at that address, not merely specified.
+
+The site is no longer the site of one group.
+Drawing and sharing are open to anyone who opens the address; only the history belongs to somebody, and it belongs to a round, `?runde=<slug>`.
+The bare address has no history at all.
 
 **Reached.**
 The site answers at that address over HTTPS and was opened and checked there.
@@ -35,6 +39,7 @@ These came out of the charting conversation.
 They are not up for re-litigation without a new reason.
 
 - The draw binds the whole group. One letter and one colour per year, not one per person.
+- A round is a named archive strand and nothing else. Several groups can use the site without mixing up each other's past years.
 - Who gifts whom is out of scope. See Out of scope.
 - Every letter stays in the pool, including Q, X and Y, plus Ä, Ö and Ü. ß is excluded, because no German word begins with it.
 - Colours are one flat list with equal probability. Ordinary and wild colours sit together, so Glitzer is exactly as likely as Blau.
@@ -58,6 +63,14 @@ They are not up for re-litigation without a new reason.
 - [Die Enthüllung zum Mitmachen](issues/11-enthuellung-zum-mitmachen.md): five interactive reveals were built, where the result is uncovered by hand instead of playing by itself, and none of them was taken. Staub stays as it is. The drafts stay in `prototypen/mitmachen/` as the record of what Staub was measured against, and are not maintained further. The question the round leaves behind is not about gestures: a shared link is read by someone who only wanted to look something up, and that ties to ticket 09.
 
 - [Neu auslosen steht auch dem, der nur schauen kommt](issues/09-neu-auslosen-fuer-gaeste.md): on a result reached by a shared link or from the archive, "Neu auslosen" is gone entirely and "Topf ansehen" takes its place in the button row. Drawing stays ungated, but quiet: the year badge is a link back to the invitation, faintly underlined so it is findable without hover. A fresh draw is unchanged. The invitation gained its own reserved address, `losen`, which beats the archive; it replaces `filter~<ausschluss>`, which did not.
+
+- [Runden als Archiv-Linse](issues/12-runden-als-archiv-linse.md): the site opens to other groups, and a round is a named archive strand and nothing else.
+  It rides in the query, `?runde=geschwisterwichteln`, because the hash is fully spoken for by the view grammar and a name in it would be ambiguous against a token.
+  Archives move to `archiv/<slug>.json`, the loader validates rather than normalises, and a bare address has no history at all.
+  Deliberately not built: no name field on the page, no pool per round, no registry of known rounds, no display name beside the slug.
+  Built: `src/runde.js` checks and builds the path, `src/app.js` loads it, `archiv.json` moved to `archiv/geschwisterwichteln.json`, and `npm run archivieren` aborts rather than write into an unnamed round.
+  The group has to be given the address with the parameter once, because an old bookmark now shows no history.
+  The term itself and the slug rule now live in `CONTEXT.md`, which this ticket created as the repo's glossary.
 
 ## Not yet specified
 

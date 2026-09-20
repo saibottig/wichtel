@@ -44,14 +44,15 @@ The 403 that the container's proxy returned for CDN requests is gone, so a libra
 
 ## Looking at the site
 
-`index.html` loads `src/app.js` as a module and fetches `archiv.json`, so opening the file over `file://` will not work.
+`index.html` loads `src/app.js` as a module and fetches `archiv/<runde>.json`, so opening the file over `file://` will not work.
 Serve the repository root:
 
 ```
 npx --yes http-server -p 8099 -s
 ```
 
-Then open http://localhost:8099.
+Then open http://localhost:8099/?runde=geschwisterwichteln.
+Without the parameter the page has no history, which is correct and not a fault to chase.
 
 The live site is https://wichtel.turbodev.eu.
 It answers over HTTPS, and plain HTTP is redirected, because Enforce HTTPS is on.
@@ -113,9 +114,10 @@ It is not a precedent for the next dependency, and the linter question in the ha
 
 ## Archiving a year
 
-`npm run archivieren -- '<geteilter Link>'` decodes the shared link and writes the year into `archiv.json`.
+`npm run archivieren -- '<geteilter Link>'` decodes the shared link and writes the year into `archiv/<runde>.json`.
+The round comes out of the link's `?runde=` parameter; a bare token needs `--runde <slug>` instead, and without either the script aborts rather than guess a file.
 That is a maintainer job and it runs here now.
-Commit the changed `archiv.json` afterwards, because the commit is the record.
+Commit the changed archive file afterwards, because the commit is the record.
 
 ## What still needs a human
 

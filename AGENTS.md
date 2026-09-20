@@ -67,5 +67,6 @@ Read it before touching anything that moves, and before checking such a change b
 ### Domain docs
 
 Single-context layout: `CONTEXT.md` and `docs/adr/` at the repo root.
-Neither exists yet, and neither should be created upfront.
+`CONTEXT.md` holds the glossary and is the authority on the German domain terms; read it before naming anything.
+`docs/adr/` does not exist yet and should not be created upfront.
 See `docs/agents/domain.md`.

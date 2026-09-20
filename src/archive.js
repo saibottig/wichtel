@@ -2,8 +2,9 @@
  * Das Archiv der vergangenen Jahre.
  *
  * Der Link ist der Moment, der Commit ist die Aufzeichnung. Diese Funktionen
- * arbeiten auf dem Inhalt von `archiv.json`, einem Objekt mit dem Jahr als
- * Schlüssel.
+ * arbeiten auf dem Inhalt von `archiv/<runde>.json`, einem Objekt mit dem Jahr
+ * als Schlüssel. Welche Datei das ist, entscheidet `runde.js`; hier drin
+ * kommt die Runde nicht vor, denn alle Runden haben dasselbe Format.
  *
  * Archivieren ist Sache des Ausrichters und passiert über `scripts/archivieren.mjs`.
  * Die Seite liest hier nur.

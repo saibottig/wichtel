@@ -11,6 +11,7 @@ import { encodeToken, encodeAusschluss } from './token.js';
 import { OHNE_AUSSCHLUSS, topfVon, ausgeschlossenVon, umschalten, istVoll, zaehle } from './filter.js';
 import { chooseView } from './view.js';
 import { pastYears } from './archive.js';
+import { archivPfad, rundeAus } from './runde.js';
 import { BUCHSTABEN, FARBEN, FARBTOENE, darstellungFuer, tupferFuer } from './pool.js';
 
 const $ = (id) => document.getElementById(id);
@@ -431,14 +432,19 @@ const starten = async () => {
   grundMoeglich();
   if (!ruhigeBewegung()) enthuellungHolen();
 
+  // Ohne Runde in der Adresse gibt es keine Historie: die nackte Adresse gehört
+  // keiner Gruppe. Eine unbekannte Runde liefert eine 404 und damit dasselbe.
   let archiv = {};
-  try {
-    const antwort = await fetch('archiv.json', { cache: 'no-cache' });
-    if (antwort.ok) {
-      archiv = await antwort.json();
+  const pfad = archivPfad(rundeAus(location.search));
+  if (pfad) {
+    try {
+      const antwort = await fetch(pfad, { cache: 'no-cache' });
+      if (antwort.ok) {
+        archiv = await antwort.json();
+      }
+    } catch {
+      // Ohne Archiv lässt sich immer noch ziehen und teilen.
     }
-  } catch {
-    // Ohne Archiv lässt sich immer noch ziehen und teilen.
   }
 
   zeichnen(archiv, jahr);
