@@ -25,7 +25,14 @@ test('der Buchstabentopf ist das Alphabet plus drei Umlaute', () => {
 });
 
 test('der Farbtopf ist auf Wiederholungen hin bemessen', () => {
-  assert.equal(FARBEN.length, 28);
+  assert.equal(FARBEN.length, 30);
+});
+
+test('die Farben der Jahre vor der Seite stehen im Topf und sind nicht verbraucht', () => {
+  for (const farbe of ['Moosgrün', 'Sonnengelb']) {
+    assert.ok(FARBEN.includes(farbe), `fehlt im Topf: ${farbe}`);
+    assert.notEqual(tupferFuer(farbe), TUPFER_UNBEKANNT, `ohne Tupfer: ${farbe}`);
+  }
 });
 
 test('Glitzer und Bunt liegen im selben Topf wie die gewoehnlichen Farben', () => {

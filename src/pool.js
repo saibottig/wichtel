@@ -16,9 +16,13 @@ export const BUCHSTABEN = Object.freeze([...'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'Ä', 
 /**
  * Gewöhnliche und wilde Farben in einem Topf.
  *
- * Die Länge ist gegen Wiederholungen bemessen. Bei 28 Einträgen bleibt eine
+ * Die Länge ist gegen Wiederholungen bemessen. Bei 30 Einträgen bleibt eine
  * doppelte Farbe für weit über ein Jahrzehnt unwahrscheinlich, bei der Hälfte
  * fängt es nach ungefähr sechs Jahren an aufzufallen.
+ *
+ * Moosgrün und Sonnengelb kommen aus den Jahren vor der Seite und stehen im
+ * Archiv. Sie liegen im selben Topf wie alles andere, können also wieder
+ * gezogen werden: ein alter Name ist kein verbrauchter Name.
  *
  * Nichts ist rausgeflogen, weil es schwer zu kaufen wäre. Dieselbe Entscheidung
  * wie bei Q, X und Y.
@@ -65,6 +69,8 @@ const FARBTOPF = Object.freeze([
   },
   { name: 'Dunkelblau', tupfer: '#1e3a73', ton: 'hell' },
   { name: 'Hellgrün', tupfer: '#8ed06a', ton: 'dunkel' },
+  { name: 'Moosgrün', tupfer: '#5b7238', ton: 'hell' },
+  { name: 'Sonnengelb', tupfer: '#f5c21b', ton: 'dunkel' },
   { name: 'Bordeaux', tupfer: '#7a2233', ton: 'hell' },
   {
     name: 'Glitzer',
