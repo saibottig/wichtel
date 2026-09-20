@@ -72,10 +72,30 @@ test('ein Filter im Topf-Link kommt mit', () => {
 
 test('die Auslosung merkt sich ihren Filter über die Adresse', () => {
   const filter = { buchstaben: [], farben: ['Bunt'] };
-  const ansicht = ansichtFuer(`filter~${encodeAusschluss(filter)}`);
+  const ansicht = ansichtFuer(`losen~${encodeAusschluss(filter)}`);
 
   assert.equal(ansicht.art, 'auslosung');
   assert.deepEqual(ansicht.filter, filter);
+});
+
+test('losen lädt zur Auslosung ein, auch wenn das Jahr schon archiviert ist', () => {
+  const ansicht = ansichtFuer('losen', 2025);
+
+  assert.equal(ansicht.art, 'auslosung');
+  assert.equal(ansicht.jahr, 2025);
+  assert.deepEqual(ansicht.filter, OHNE_AUSSCHLUSS);
+});
+
+test('auch mit Filter schlägt losen das Archiv', () => {
+  const filter = { buchstaben: ['X'], farben: [] };
+  const ansicht = ansichtFuer(`losen~${encodeAusschluss(filter)}`, 2025);
+
+  assert.equal(ansicht.art, 'auslosung');
+  assert.deepEqual(ansicht.filter, filter);
+});
+
+test('das Jahr der Einladung steht nicht auch unter den vergangenen', () => {
+  assert.deepEqual(ansichtFuer('losen', 2025).vergangeneJahre.map((e) => e.jahr), [2024]);
 });
 
 test('der Topf zu einem Ergebnis zeigt dessen Menge und ist schreibgeschützt', () => {

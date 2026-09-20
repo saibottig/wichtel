@@ -176,6 +176,32 @@ body {
   text-transform: uppercase;
 }
 
+/* Das Jahr führt zurück zum Auslosen, aber nur, wo es das soll. Ohne `href`
+   ist die Marke reiner Text, und dann darf nichts an ihr nach Klick aussehen. */
+.pille a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Schwach unterstrichen, nicht erst beim Zeigen: auf dem Telefon gibt es kein
+   Darüberfahren, und für den, der aus dem Gruppenchat kommt, ist das Jahr der
+   einzige Weg zum eigenen Auslosen. */
+.pille a[href] span {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+}
+
+.pille a[href]:hover span {
+  text-decoration-color: currentColor;
+}
+
+.pille a:focus-visible span {
+  outline: 2px solid var(--schrift);
+  outline-offset: 3px;
+}
+
 .riese {
   margin: auto 0 0;
   font-size: clamp(9rem, 44vw, 14rem);
@@ -231,6 +257,13 @@ body {
   transition:
     transform 120ms ease,
     background-color 160ms ease;
+}
+
+/* Ein Knopf, der in Wahrheit ein Link ist: der Topf ist eine Adresse, keine
+   Handlung, und soll sich kopieren und in neuem Tab öffnen lassen. */
+a.knopf {
+  display: inline-block;
+  text-decoration: none;
 }
 
 .knopf:hover {

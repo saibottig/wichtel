@@ -29,7 +29,7 @@ let filter = OHNE_AUSSCHLUSS;
 const topfAdresse = (f) => (istVoll(f) ? 'topf' : `topf~${encodeAusschluss(f)}`);
 
 /** Adresse für die Einladung, die sich denselben Filter merkt. */
-const auslosungAdresse = (f) => (istVoll(f) ? '' : `filter~${encodeAusschluss(f)}`);
+const auslosungAdresse = (f) => (istVoll(f) ? 'losen' : `losen~${encodeAusschluss(f)}`);
 
 const ruhigeBewegung = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -43,7 +43,9 @@ const zeigeBereich = (name) => {
 };
 
 const knoepfeSperren = (gesperrt) => {
-  for (const knopf of document.querySelectorAll('.knopf')) {
+  // Nur echte Knöpfe: ein Link lässt sich nicht sperren, und die, die wie
+  // Knöpfe aussehen, stehen ohnehin nicht da, während etwas läuft.
+  for (const knopf of document.querySelectorAll('button.knopf')) {
     knopf.disabled = gesperrt;
   }
 };
@@ -116,8 +118,39 @@ const schreibeErgebnis = (ergebnis, { fluten = true } = {}) => {
     `Das Geschenk fängt mit ${buchstabe} an und ist ${farbe.toLowerCase()}.`;
   // Der Topf hängt am Ergebnis, nicht am Zeichnen: nach einer frischen
   // Auslosung läuft das Zeichnen nicht noch einmal.
-  $('link-ergebnis-topf').href = `#${encodeToken(ergebnis)}~topf`;
+  const topfHier = `#${encodeToken(ergebnis)}~topf`;
+  $('link-ergebnis-topf').href = topfHier;
+  $('knopf-ergebnis-topf').href = topfHier;
   if (fluten) grundFluten(farbe);
+};
+
+/**
+ * Was die Ergebnis-Seite anbietet, hängt daran, wie man hergekommen ist.
+ *
+ * Wer gerade gezogen hat, darf neu ziehen, und der Topf steht klein darunter.
+ * Wer aus dem Gruppenchat kommt oder das archivierte Jahr aufruft, will
+ * schauen: für den gibt es "Neu auslosen" nicht, denn ein Fehlklick nähme ihm
+ * das geteilte Ergebnis aus der Adresszeile, und der Link, den er stattdessen
+ * bekäme, konkurriert in der Gruppe mit dem echten. An die freie Stelle rückt
+ * der Topf. Ziehen bleibt ihm trotzdem offen, über das Jahr oben, das dann als
+ * Link steht: ungesperrt, nur nicht mehr gleich laut.
+ */
+const knoepfeStellen = (quelle) => {
+  const zumSchauen = quelle === 'link' || quelle === 'archiv';
+
+  $('knopf-neu').hidden = zumSchauen;
+  $('knopf-ergebnis-topf').hidden = !zumSchauen;
+  $('weiter-ergebnis-topf').hidden = zumSchauen;
+
+  const jahr = $('link-ergebnis-jahr');
+  if (zumSchauen) {
+    jahr.href = `#${auslosungAdresse(OHNE_AUSSCHLUSS)}`;
+    jahr.title = 'Selbst auslosen';
+  } else {
+    // Ohne `href` ist es wieder nur Text, nicht anklickbar und nicht im Tabzug.
+    jahr.removeAttribute('href');
+    jahr.removeAttribute('title');
+  }
 };
 
 const zeigeVergangeneJahre = (jahre) => {
@@ -287,8 +320,9 @@ const enthuellungHolen = () => {
  * wenn die Enthüllung nicht lädt, tut es der alte Lauf. Die Seite hängt nicht
  * an three.js.
  */
-const ergebnisZeigen = async (ergebnis) => {
+const ergebnisZeigen = async (ergebnis, quelle) => {
   schreibeErgebnis(ergebnis, { fluten: false });
+  knoepfeStellen(quelle);
   zeigeBereich('ergebnis');
   grundMoeglich();
 
@@ -321,7 +355,7 @@ const auslosen = async (archiv, jahr) => {
   // Das frisch gezogene Jahr steht oben und gehört nicht noch einmal in die Liste.
   zeigeVergangeneJahre(pastYears(archiv).filter((eintrag) => eintrag.jahr !== jahr));
 
-  await ergebnisZeigen(ergebnis);
+  await ergebnisZeigen(ergebnis, 'auslosung');
   knoepfeSperren(false);
 
   selbstGesetzterToken = encodeToken(ergebnis);
@@ -362,7 +396,7 @@ const zeichnen = (archiv, jahr) => {
   if (ansicht.art === 'ergebnis') {
     // Ohne `await`: `zeichnen` ist der eine Zug, mit dem die Seite sich hinstellt,
     // und der darf nicht drei Sekunden dauern.
-    ergebnisZeigen(ansicht.ergebnis);
+    ergebnisZeigen(ansicht.ergebnis, ansicht.quelle);
   } else if (ansicht.art === 'auslosung') {
     grundMoeglich();
     $('auslosung-jahr').textContent = `Wichteln ${ansicht.jahr}`;

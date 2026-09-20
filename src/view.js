@@ -6,15 +6,20 @@
  *
  * Dieses Modul ist die einzige Stelle, die weiß, was hinter dem `#` steht:
  *
- * - `` leer: die Einladung zur Auslosung
- * - `filter~<ausschluss>`: dieselbe Einladung, aber mit gefiltertem Topf
+ * - `` leer: die Einladung zur Auslosung, oder das archivierte Jahr
+ * - `losen`: die Einladung, ausdrücklich, auch wenn das Jahr schon archiviert ist
+ * - `losen~<ausschluss>`: dieselbe Einladung, aber mit gefiltertem Topf
  * - `topf`: der Topf zum Ansehen und Bearbeiten
  * - `topf~<ausschluss>`: derselbe Topf, schon gefiltert
  * - `<token>`: ein Ergebnis
  * - `<token>~topf`: der Topf, aus dem dieses Ergebnis gezogen wurde
  *
+ * Der Unterschied zwischen leer und `losen` ist der Weg dorthin. Leer ist, wer
+ * die Seite aufruft, und der soll sehen, was für dieses Jahr gilt. `losen` ist,
+ * wer von einem Ergebnis aus zurückgegangen ist, und der will ziehen.
+ *
  * `~` kommt in base64url nicht vor, trennt hier also eindeutig. `topf` und
- * `filter` sind als Adressen reserviert; für einen echten Token sind sie viel
+ * `losen` sind als Adressen reserviert; für einen echten Token sind sie viel
  * zu kurz, weil der immer Jahr, Buchstabe, Farbe und Prüfsumme trägt.
  *
  * Welches Jahr das laufende ist, entscheidet dieses Modul bewusst nicht. Es
@@ -31,16 +36,27 @@ import { OHNE_AUSSCHLUSS } from './filter.js';
 import { resultFor, pastYears } from './archive.js';
 
 const TOPF = 'topf';
-const FILTER = 'filter';
+const LOSEN = 'losen';
+
+/** Passt die Adresse auf ein reserviertes Wort, mit oder ohne Filter dahinter? */
+const istWort = (hash, wort) => hash === wort || hash.startsWith(`${wort}~`);
+
+/**
+ * Der Filter hinter einem reservierten Wort, also das Stück nach dem `~`.
+ * Steht da nichts, ist der Topf voll.
+ */
+const filterHinter = (hash, wort) => {
+  const ausschluss = hash.slice(wort.length + 1);
+  return ausschluss ? decodeAusschluss(ausschluss) : OHNE_AUSSCHLUSS;
+};
 
 /** Zerlegt die Adresse in Token, Ziel und mitgegebenen Filter. */
 const leseAdresse = (hash) => {
-  if (hash === TOPF || hash.startsWith(`${TOPF}~`)) {
-    const ausschluss = hash.slice(TOPF.length + 1);
-    return { token: '', ziel: TOPF, filter: ausschluss ? decodeAusschluss(ausschluss) : OHNE_AUSSCHLUSS };
+  if (istWort(hash, TOPF)) {
+    return { token: '', ziel: TOPF, filter: filterHinter(hash, TOPF) };
   }
-  if (hash.startsWith(`${FILTER}~`)) {
-    return { token: '', ziel: '', filter: decodeAusschluss(hash.slice(FILTER.length + 1)) };
+  if (istWort(hash, LOSEN)) {
+    return { token: '', ziel: LOSEN, filter: filterHinter(hash, LOSEN) };
   }
   if (hash.endsWith(`~${TOPF}`)) {
     return { token: hash.slice(0, -(TOPF.length + 1)), ziel: TOPF, filter: null };
@@ -88,15 +104,23 @@ export const chooseView = ({ hash, archiv, jahr }) => {
     return { art: 'topf', bearbeitbar: true, filter, jahr, vergangeneJahre: ohne(jahr) };
   }
 
+  const einladung = () => ({
+    art: 'auslosung',
+    jahr,
+    filter: filter ?? OHNE_AUSSCHLUSS,
+    vergangeneJahre: ohne(jahr),
+  });
+
+  // Wer ausdrücklich losen will, bekommt die Einladung, auch wenn für dieses
+  // Jahr schon ein Ergebnis im Archiv steht. Sonst käme er von dort nie weg.
+  if (ziel === LOSEN) {
+    return einladung();
+  }
+
   const archiviert = resultFor(archiv, jahr);
   if (archiviert) {
     return { art: 'ergebnis', quelle: 'archiv', ergebnis: archiviert, vergangeneJahre: ohne(jahr) };
   }
 
-  return {
-    art: 'auslosung',
-    jahr,
-    filter: filter ?? OHNE_AUSSCHLUSS,
-    vergangeneJahre: ohne(jahr),
-  };
+  return einladung();
 };

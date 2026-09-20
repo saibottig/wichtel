@@ -21,16 +21,21 @@
 
     <main class="buehne">
       <section id="bereich-ergebnis" class="zustand" hidden>
-        <p class="pille"><span id="ergebnis-jahr"></span></p>
+        <p class="pille">
+          <a id="link-ergebnis-jahr"><span id="ergebnis-jahr"></span></a>
+        </p>
         <p class="riese" id="ergebnis-buchstabe">?</p>
         <p class="wort" id="ergebnis-farbname"></p>
         <p class="satz" id="ergebnis-regel" role="status"></p>
         <div class="knopfreihe">
           <button type="button" class="knopf knopf-haupt" id="knopf-kopieren">Link kopieren</button>
           <button type="button" class="knopf knopf-still" id="knopf-neu">Neu auslosen</button>
+          <a class="knopf knopf-still" id="knopf-ergebnis-topf" href="#topf" hidden>Topf ansehen</a>
         </div>
         <p class="hinweis" id="kopier-rueckmeldung" role="status"></p>
-        <p class="weiter"><a id="link-ergebnis-topf" href="#topf">Topf ansehen</a></p>
+        <p class="weiter" id="weiter-ergebnis-topf">
+          <a id="link-ergebnis-topf" href="#topf">Topf ansehen</a>
+        </p>
       </section>
 
       <section id="bereich-auslosung" class="zustand" hidden>

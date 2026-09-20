@@ -57,9 +57,9 @@ They are not up for re-litigation without a new reason.
 
 - [Die Enthüllung zum Mitmachen](issues/11-enthuellung-zum-mitmachen.md): five interactive reveals were built, where the result is uncovered by hand instead of playing by itself, and none of them was taken. Staub stays as it is. The drafts stay in `prototypen/mitmachen/` as the record of what Staub was measured against, and are not maintained further. The question the round leaves behind is not about gestures: a shared link is read by someone who only wanted to look something up, and that ties to ticket 09.
 
-## Not yet specified
+- [Neu auslosen steht auch dem, der nur schauen kommt](issues/09-neu-auslosen-fuer-gaeste.md): on a result reached by a shared link or from the archive, "Neu auslosen" is gone entirely and "Topf ansehen" takes its place in the button row. Drawing stays ungated, but quiet: the year badge is a link back to the invitation, faintly underlined so it is findable without hover. A fresh draw is unchanged. The invitation gained its own reserved address, `losen`, which beats the archive; it replaces `filter~<ausschluss>`, which did not.
 
-- [Neu auslosen steht auch dem, der nur schauen kommt](issues/09-neu-auslosen-fuer-gaeste.md): the result page offers the same prominent "Neu auslosen" to a visitor arriving from the group chat as to the person who just drew. Nothing is overwritten, but the shared result is lost from their address bar and a competing link can end up back in the chat.
+## Not yet specified
 
 - What the site should do in the months after Christmas. The page takes the calendar year, so on 1 January it stops showing the result the group is still wichteling under and invites a draw for a Wichteln eleven months away. Nobody will open it then, which is why this was left rather than guessed at.
 

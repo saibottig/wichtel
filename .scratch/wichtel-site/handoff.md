@@ -81,8 +81,10 @@ Ein Bildschirmfoto von fünf laufenden WebGL-Bühnen kostet über eine Sekunde, 
 
 ## Sonst noch offen
 
-- Ticket 09, `issues/09-neu-auslosen-fuer-gaeste.md`: "Neu auslosen" steht dem Besucher aus dem Gruppenchat genauso laut zur Verfügung wie dem, der gerade gezogen hat.
 - Der Jahreswechsel im Januar, in `map.md` unter "Not yet specified".
+
+Ticket 09 ist erledigt: bei `quelle: 'link'` und `quelle: 'archiv'` fällt "Neu auslosen" weg, "Topf ansehen" rückt als Knopf nach, und die Jahresmarke oben führt als Link zurück zur Einladung.
+Deren Adresse heißt jetzt `losen` und schlägt das Archiv; `filter~<ausschluss>` gibt es nicht mehr.
 
 "Enforce HTTPS" ist erledigt und steht hier nicht mehr offen, siehe den Nachtrag in Ticket 02.
 
